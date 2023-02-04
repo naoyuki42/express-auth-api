@@ -1,7 +1,8 @@
 import Express from "express";
 import jwt from "jsonwebtoken";
 
-import { HTTP_STATUS_UNAUTHORIZED, JWT_SECRET_KEY } from "../constants";
+import { JWT_SECRET_KEY } from "../config/config";
+import { HTTP_STATUS_UNAUTHORIZED } from "../config/constants";
 
 export const authMiddleware = (
   req: Express.Request,

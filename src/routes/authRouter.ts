@@ -2,7 +2,7 @@ import Express from "express";
 
 import { authMiddleware } from "../middleware/authMiddleware";
 import { LoginHandler } from "../handler/authHandler";
-import { HTTP_STATUS_OK } from "../constants";
+import { HTTP_STATUS_OK } from "../config/constants";
 
 const router = Express.Router();
 

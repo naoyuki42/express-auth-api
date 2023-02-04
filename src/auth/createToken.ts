@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { JWT_SECRET_KEY, EXPIRES_IN } from "../constants";
+import { JWT_SECRET_KEY, EXPIRES_IN } from "../config/constants";
 
 export const createToken = (userName: string): string => {
   const payload = {

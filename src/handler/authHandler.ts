@@ -1,6 +1,6 @@
 import { createToken } from "../auth/createToken";
 
-import { EXPIRES_IN } from "../constants";
+import { EXPIRES_IN } from "../config/config";
 
 import { LoginRequest } from "../types/request/login";
 import { LoginResponse } from "../types/response/login";
