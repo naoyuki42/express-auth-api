@@ -1,0 +1,13 @@
+services:
+  db:
+    container_name: express-auth-db
+    image: mysql:latest
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_USER: auth
+      MYSQL_PASSWORD: auth
+      MYSQL_DATABASE: auth
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db:/var/lib/mysql
