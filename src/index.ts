@@ -1,14 +1,17 @@
 import Express from "express";
-import Config from "./config/config";
-import routes from "./routes";
+
 import database from "./config/database";
+import routes from "./routes";
+
+import Config from "./config/config";
+import URI from "./constants/URI";
 
 const app = Express();
 
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 
-app.use("/api", routes);
+app.use(URI.PREFIX.API, routes);
 
 database.connect((err: any) => {
   if (err) throw err;

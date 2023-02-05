@@ -1,8 +1,8 @@
 import Express from "express";
 import jwt from "jsonwebtoken";
 
-import { JWT_SECRET_KEY } from "../config/config";
-import { HTTP_STATUS_UNAUTHORIZED } from "../config/constants";
+import Config from "../config/config";
+import HTTP_STATUS from "../constants/httpStatus";
 
 export const authMiddleware = (
   req: Express.Request,
@@ -13,17 +13,17 @@ export const authMiddleware = (
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.split(" ")[0] === "Bearer"
+    req.headers.authorization.split(" ")[0] === Config.AUTHORIZATION_TOKEN_TYPE
   ) {
     // Authorizationヘッダーからトークンの値を抽出
     token = req.headers.authorization.split(" ")[1];
     // JWTトークンの検証
-    jwt.verify(token, JWT_SECRET_KEY, (err) => {
+    jwt.verify(token, Config.JWT_SECRET_KEY, (err) => {
       if (err) {
-        res.status(HTTP_STATUS_UNAUTHORIZED).json({ message: "Unauthorized" });
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
       }
     });
   } else {
-    res.status(HTTP_STATUS_UNAUTHORIZED).json({ message: "Unauthorized" });
+    res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
   }
 };

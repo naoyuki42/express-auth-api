@@ -1,3 +1,4 @@
+// TODO:.envファイルから読み込むように変更したい
 const Config = {
   // Webサーバーのポート
   PORT: 3000,
@@ -13,6 +14,8 @@ const Config = {
   // DBサーバーのデータベース
   DB_DATABASE: "auth",
 
+  // 認証トークンのタイプ
+  AUTHORIZATION_TOKEN_TYPE: "Bearer",
   // JWTトークン生成用の秘密鍵
   JWT_SECRET_KEY: "abcdefg",
   // JWTトークンの有効期限（分）

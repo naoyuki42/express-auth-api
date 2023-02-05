@@ -1,6 +1,6 @@
 import { createToken } from "../auth/createToken";
 
-import { EXPIRES_IN } from "../config/config";
+import Config from "../config/config";
 
 import { LoginRequest } from "../types/request/login";
 import { LoginResponse } from "../types/response/login";
@@ -10,7 +10,7 @@ export const LoginHandler = (request: LoginRequest): LoginResponse => {
   const token = createToken(request.userName);
   const response: LoginResponse = {
     accessToken: token,
-    expired: EXPIRES_IN,
+    expired: Config.EXPIRES_IN,
   };
   return response;
 };
