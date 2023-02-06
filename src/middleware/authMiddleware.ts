@@ -9,18 +9,18 @@ export const authMiddleware = (
   res: Express.Response,
   next: Express.NextFunction
 ): void => {
-  let token = "";
-
   if (
     req.headers.authorization &&
     req.headers.authorization.split(" ")[0] === Config.AUTHORIZATION_TOKEN_TYPE
   ) {
     // Authorizationヘッダーからトークンの値を抽出
-    token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization.split(" ")[1];
     // JWTトークンの検証
     jwt.verify(token, Config.JWT_SECRET_KEY, (err) => {
       if (err) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
+      } else {
+        next();
       }
     });
   } else {
