@@ -20,12 +20,17 @@ router.post(
   URI.USER.CREATE,
   async (req: Express.Request, res: Express.Response): Promise<void> => {
     try {
-      // TODO:usernameの重複エラーが検出出来ていない
       await createUserHandler(req.body);
       res.status(HTTP_STATUS.CREATED).json();
-    } catch (err) {
-      // TODO:エラーハンドリングの共通化
-      res.status(HTTP_STATUS.SERVER_ERROR).json({ message: err });
+    } catch (err: unknown) {
+      // TODO:エラーハンドリングとエラーメッセージの共通化
+      if (err instanceof Error) {
+        const response = {
+          code: HTTP_STATUS.SERVER_ERROR,
+          message: err.message,
+        };
+        res.status(HTTP_STATUS.SERVER_ERROR).json(response);
+      }
     }
   }
 );
