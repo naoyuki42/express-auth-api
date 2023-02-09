@@ -1,17 +1,13 @@
 import Express from "express";
 
-import routes from "./routes";
-
-import Config from "./config/config";
-import URI from "./constants/URI";
+import router from "./router";
+import { PORT } from "./config/env";
 
 const app = Express();
 
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 
-app.use(URI.PREFIX.API, routes);
+app.use(router);
 
-app.listen(Config.PORT, () =>
-  console.log(`App Listening on Port:${Config.PORT}`)
-);
+app.listen(PORT, () => console.log(`App Listening on Port:${PORT}`));

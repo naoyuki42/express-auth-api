@@ -1,11 +1,11 @@
-import Config from "./config";
+import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE } from "./env";
 
-const database = {
-  host: Config.DB_HOST,
-  port: Config.DB_PORT,
-  user: Config.DB_USER,
-  password: Config.DB_PASSWORD,
-  database: Config.DB_DATABASE,
+const Database = {
+  host: DB_HOST,
+  port: DB_PORT,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_DATABASE,
 };
 
-export default database;
+export default Database;
