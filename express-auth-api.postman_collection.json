@@ -55,34 +55,6 @@
 					"response": []
 				},
 				{
-					"name": "要認証API",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{ACCESS_TOKEN}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/auth/hello",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"auth",
-								"hello"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "ログアウト",
 					"request": {
 						"method": "POST",
