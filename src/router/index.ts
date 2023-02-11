@@ -21,11 +21,13 @@ import { authMiddleware } from "../middleware/auth/handler";
 
 const APIRouter = Router();
 
+// TODO: バリデーションのミドルウェアの追加
+
 /** 認証 */
 /** ログインAPI */
 APIRouter.use(URI_AUTH_LOGIN, loginHandler);
 /** ログアウトAPI */
-APIRouter.use(URI_AUTH_LOGOUT, logoutHandler);
+APIRouter.use(URI_AUTH_LOGOUT, authMiddleware, logoutHandler);
 
 /** ユーザー */
 /** ユーザー取得API */
