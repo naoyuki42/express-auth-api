@@ -14,6 +14,5 @@ export const userCreateModel = async (
     params
   );
   connection.end();
-  // TODO:型の整理
   return { userId: result.insertId };
 };

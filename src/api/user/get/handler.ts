@@ -5,23 +5,24 @@ import {
   HTTP_STATUS_OK,
   HTTP_STATUS_SERVER_ERROR,
 } from "../../../constants/HTTPStatus";
-import { ErrorResponse } from "../../../types/response/error";
+import { SERVER_ERROR } from "../../../constants/Message";
+import { ResponseError, ResponseUserGet } from "../../../types/response";
 
 export const userGetHandler = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const response = await userGetModel(Number(req.params.userId));
+    const response: ResponseUserGet = await userGetModel(
+      Number(req.params.userId)
+    );
     res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {
-    // TODO:エラーハンドリングの共通化
-    if (err instanceof Error) {
-      const response: ErrorResponse = {
-        code: HTTP_STATUS_SERVER_ERROR,
-        message: err.message,
-      };
-      res.status(HTTP_STATUS_SERVER_ERROR).json(response);
-    }
+    console.error(err);
+    const response: ResponseError = {
+      code: HTTP_STATUS_SERVER_ERROR,
+      message: SERVER_ERROR,
+    };
+    res.status(HTTP_STATUS_SERVER_ERROR).json(response);
   }
 };

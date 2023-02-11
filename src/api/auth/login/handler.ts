@@ -1,18 +1,32 @@
-import Express from "express";
+import { Request, Response } from "express";
 
-import { HTTP_STATUS_OK } from "../../../constants/HTTPStatus";
 import { createToken } from "./service/createToken";
 import { TOKEN_EXPIRES_IN } from "../../../config/env";
+import {
+  HTTP_STATUS_OK,
+  HTTP_STATUS_SERVER_ERROR,
+} from "../../../constants/HTTPStatus";
+import { SERVER_ERROR } from "../../../constants/Message";
+import { ResponseLogin, ResponseError } from "../../../types/response";
 
-export const loginHandler = (
-  req: Express.Request,
-  res: Express.Response
-): void => {
-  // TODO:今はログインユーザー全てを認証しているので、検証可能にする
-  const token = createToken(req.body.userName);
-  const response = {
-    accessToken: token,
-    expired: TOKEN_EXPIRES_IN,
-  };
-  res.status(HTTP_STATUS_OK).json(response);
+export const loginHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    // TODO:今はログインユーザー全てを認証しているので、検証可能にする
+    const token = await createToken(req.body.userName);
+    const response: ResponseLogin = {
+      accessToken: token,
+      expired: TOKEN_EXPIRES_IN,
+    };
+    res.status(HTTP_STATUS_OK).json(response);
+  } catch (err: unknown) {
+    console.error(err);
+    const response: ResponseError = {
+      code: HTTP_STATUS_SERVER_ERROR,
+      message: SERVER_ERROR,
+    };
+    res.status(HTTP_STATUS_SERVER_ERROR).json(response);
+  }
 };
