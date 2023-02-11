@@ -13,9 +13,11 @@ export const userGetHandler = async (
   res: Response
 ): Promise<void> => {
   try {
-    const response: ResponseUserGet = await userGetModel(
-      Number(req.params.userId)
-    );
+    const { id, name } = await userGetModel(Number(req.params.userId));
+    const response: ResponseUserGet = {
+      userId: id,
+      userName: name,
+    };
     res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {
     console.error(err);

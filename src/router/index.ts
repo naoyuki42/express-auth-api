@@ -17,7 +17,7 @@ import { userGetHandler } from "../api/user/get/handler";
 
 import { healthCheckHandler } from "../api/healthCheck/handler";
 
-import { authMiddleware } from "../middleware/authMiddleware";
+import { authMiddleware } from "../middleware/auth/handler";
 
 const APIRouter = Router();
 

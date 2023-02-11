@@ -6,7 +6,8 @@ import { QUERY_USER_CREATE } from "../../../constants/Query";
 export const userCreateModel = async (
   userName: string,
   password: string
-): Promise<{ userId: number }> => {
+): Promise<ResultSetHeader> => {
+  // TODO:パスワードのハッシュ化
   const params = [userName, password];
   const connection = await mysql.createConnection(database);
   const [result] = await connection.execute<ResultSetHeader>(
@@ -14,5 +15,5 @@ export const userCreateModel = async (
     params
   );
   connection.end();
-  return { userId: result.insertId };
+  return result;
 };

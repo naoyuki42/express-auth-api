@@ -13,10 +13,13 @@ export const userCreateHandler = async (
   res: Response
 ): Promise<void> => {
   try {
-    const response: ResponseUserCreate = await userCreateModel(
+    const { insertId } = await userCreateModel(
       req.body.userName,
       req.body.password
     );
+    const response: ResponseUserCreate = {
+      userId: insertId,
+    };
     res.status(HTTP_STATUS_CREATED).json(response);
   } catch (err: unknown) {
     console.error(err);

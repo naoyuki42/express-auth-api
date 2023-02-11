@@ -15,6 +15,7 @@ export const healthCheckHandler = async (
     const response: ResponseHealthCheck = { health: HEALTH_CHECK_OK };
     res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {
+    // TODO:エラーハンドリングの共通化
     console.error(err);
     const response: ResponseError = {
       code: HTTP_STATUS_SERVER_ERROR,

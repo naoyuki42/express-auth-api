@@ -15,7 +15,7 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.createTable("users", {
+  return db.createTable("user", {
     id: {
       type: "int",
       primaryKey: true,
@@ -30,6 +30,9 @@ exports.up = function (db) {
     password: {
       type: "string",
       notNull: true,
+    },
+    token: {
+      type: "string",
     },
   });
 };
