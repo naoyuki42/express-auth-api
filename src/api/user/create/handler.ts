@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { hash } from "bcrypt";
 
 import { userCreateModel } from "./model";
 import {
@@ -13,10 +14,8 @@ export const userCreateHandler = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { insertId } = await userCreateModel(
-      req.body.userName,
-      req.body.password
-    );
+    const hashPassword = await hash(req.body.password, 10);
+    const { insertId } = await userCreateModel(req.body.userName, hashPassword);
     const response: ResponseUserCreate = {
       userId: insertId,
     };

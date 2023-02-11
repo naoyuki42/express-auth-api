@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
+import { compare, hash } from "bcrypt";
 
 import { createToken } from "./service/createToken";
 import { setTokenModel, userGetAuthModel } from "./model";
-
 import { TOKEN_EXPIRES_IN } from "../../../config/env";
 import {
   HTTP_STATUS_OK,
@@ -20,8 +20,8 @@ export const loginHandler = async (
     // ログインユーザー情報の取得
     const { id, password } = await userGetAuthModel(req.body.userName);
     // パスワードの検証
-    // TODO:パスワードのハッシュ化
-    if (req.body.password !== password) throw new Error(UNAUTHORIZED);
+    const isPasswordCompare = await compare(req.body.password, password);
+    if (!isPasswordCompare) throw new Error(UNAUTHORIZED);
     // アクセストークンの発行
     const token = await createToken(req.body.userName);
     // アクセストークンの保存

@@ -7,7 +7,6 @@ export const userCreateModel = async (
   userName: string,
   password: string
 ): Promise<ResultSetHeader> => {
-  // TODO:パスワードのハッシュ化
   const params = [userName, password];
   const connection = await mysql.createConnection(database);
   const [result] = await connection.execute<ResultSetHeader>(
