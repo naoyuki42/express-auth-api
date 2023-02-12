@@ -34,7 +34,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"naoyuki42\"\r\n}",
+							"raw": "{\r\n  \"userName\": \"naoyuki42\",\r\n  \"password\": \"Na0yuk1&42\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -57,6 +57,16 @@
 				{
 					"name": "ログアウト",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"url": {
@@ -118,6 +128,17 @@
 				},
 				{
 					"name": "ユーザー取得",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -130,6 +151,57 @@
 							]
 						},
 						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/user/:userId",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ユーザー削除",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -170,6 +242,23 @@
 					],
 					"path": [
 						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Not Found",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/not-found",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"not-found"
 					]
 				}
 			},

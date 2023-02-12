@@ -25,8 +25,16 @@ export class AuthHandlerClass {
     const Token = new TokenServiceClass();
     try {
       // ログインユーザー情報の取得
-      // TODO:ユーザーが取得出来なかった場合(401)とSQLが実行出来なかった場合(500)のエラーの切り分け
-      const { id, password } = await Auth.getAuthUser(req.body.userName);
+      const { id, password } = await Auth.getAuthUser(req.body.userName)
+        .then((result) => {
+          if (result !== undefined && "id" && "password" in result) {
+            return result;
+          }
+          throw new Error(UNAUTHORIZED);
+        })
+        .catch((err) => {
+          throw err;
+        });
       // パスワードの検証
       const isPasswordCompare = await compare(req.body.password, password);
       if (!isPasswordCompare) throw new Error(UNAUTHORIZED);

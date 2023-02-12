@@ -20,7 +20,6 @@ import { AuthHandlerClass } from "../api/handler/AuthHandler";
 
 const APIRouter = Router();
 
-// TODO:バリデーションのミドルウェアの追加
 /** ミドルウェア */
 const AuthMiddleware = new AuthMiddlewareClass();
 /** ハンドラー */

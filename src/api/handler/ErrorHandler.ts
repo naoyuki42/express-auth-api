@@ -21,14 +21,14 @@ export class ErrorHandlerClass {
   /** エラー */
   errorHandler(
     err: Error,
-    req: Request,
+    _req: Request,
     res: Response,
-    next: NextFunction
+    _next: NextFunction
   ): void {
     // エラーログの出力
     console.error(err);
-    // 認証失敗
-    if (err instanceof Error && err.message === UNAUTHORIZED) {
+    if (err.message === UNAUTHORIZED) {
+      // 認証失敗
       const response: ResponseError = {
         error: {
           code: HTTP_STATUS_UNAUTHORIZED,
@@ -36,9 +36,8 @@ export class ErrorHandlerClass {
         },
       };
       res.status(HTTP_STATUS_UNAUTHORIZED).json(response);
-    }
-    // 認可されていない
-    if (err instanceof (JsonWebTokenError || TokenExpiredError)) {
+    } else if (err instanceof (JsonWebTokenError || TokenExpiredError)) {
+      // 認可されていない
       const response: ResponseError = {
         error: {
           code: HTTP_STATUS_FORBIDDEN,
@@ -46,18 +45,19 @@ export class ErrorHandlerClass {
         },
       };
       res.status(HTTP_STATUS_FORBIDDEN).json(response);
+    } else {
+      // サーバーエラー
+      const response: ResponseError = {
+        error: {
+          code: HTTP_STATUS_SERVER_ERROR,
+          message: SERVER_ERROR,
+        },
+      };
+      res.status(HTTP_STATUS_SERVER_ERROR).json(response);
     }
-    // サーバーエラー
-    const response: ResponseError = {
-      error: {
-        code: HTTP_STATUS_SERVER_ERROR,
-        message: SERVER_ERROR,
-      },
-    };
-    res.status(HTTP_STATUS_SERVER_ERROR).json(response);
   }
   /** NotFound */
-  notFoundHandler = (req: Request, res: Response): void => {
+  notFoundHandler = (_req: Request, res: Response): void => {
     const response: ResponseError = {
       error: {
         code: HTTP_STATUS_NOT_FOUND,

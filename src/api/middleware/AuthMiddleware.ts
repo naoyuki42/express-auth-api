@@ -11,7 +11,7 @@ export class AuthMiddlewareClass {
   /** 認証ミドルウェア */
   async authenticate(
     req: Request,
-    res: Response,
+    _res: Response,
     next: NextFunction
   ): Promise<void> {
     const Auth = new AuthModelClass();
