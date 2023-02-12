@@ -23,8 +23,10 @@ export const userCreateHandler = async (
   } catch (err: unknown) {
     console.error(err);
     const response: ResponseError = {
-      code: HTTP_STATUS_SERVER_ERROR,
-      message: SERVER_ERROR,
+      error: {
+        code: HTTP_STATUS_SERVER_ERROR,
+        message: SERVER_ERROR,
+      },
     };
     res.status(HTTP_STATUS_SERVER_ERROR).json(response);
   }

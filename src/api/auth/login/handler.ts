@@ -36,14 +36,18 @@ export const loginHandler = async (
     console.error(err);
     if (err instanceof Error && err.message === UNAUTHORIZED) {
       const response: ResponseError = {
-        code: HTTP_STATUS_UNAUTHORIZED,
-        message: UNAUTHORIZED,
+        error: {
+          code: HTTP_STATUS_UNAUTHORIZED,
+          message: UNAUTHORIZED,
+        },
       };
       res.status(HTTP_STATUS_UNAUTHORIZED).json(response);
     } else {
       const response: ResponseError = {
-        code: HTTP_STATUS_SERVER_ERROR,
-        message: SERVER_ERROR,
+        error: {
+          code: HTTP_STATUS_SERVER_ERROR,
+          message: SERVER_ERROR,
+        },
       };
       res.status(HTTP_STATUS_SERVER_ERROR).json(response);
     }

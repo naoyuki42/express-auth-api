@@ -12,12 +12,14 @@ export type ResponseUserGet = {
 export type ResponseUserCreate = {
   userId: number;
 };
-/** レスポンス定義：エラー */
-export type ResponseError = {
-  code: number;
-  message: string;
-};
 /** レスポンス定義：ヘルスチェック */
 export type ResponseHealthCheck = {
   health: string;
+};
+/** レスポンス定義：エラー */
+export type ResponseError = {
+  error: {
+    code: number;
+    message: string;
+  };
 };
