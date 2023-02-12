@@ -8,5 +8,7 @@ export const HTTP_STATUS_NO_CONTENT = 204;
 export const HTTP_STATUS_UNAUTHORIZED = 401;
 /** HTTPステータス：403 */
 export const HTTP_STATUS_FORBIDDEN = 403;
+/** HTTPステータス：404 */
+export const HTTP_STATUS_NOT_FOUND = 404;
 /** HTTPステータス：500 */
 export const HTTP_STATUS_SERVER_ERROR = 500;

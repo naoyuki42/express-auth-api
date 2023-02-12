@@ -4,5 +4,7 @@ export const SERVER_ERROR = "server error";
 export const UNAUTHORIZED = "unauthorized";
 /** メッセージ定義：認可されていない */
 export const FORBIDDEN = "forbidden";
+/** メッセージ定義：存在しないURI */
+export const NOT_FOUND = "not found";
 /** メッセージ定義：ヘルスチェックOK */
 export const HEALTH_CHECK_OK = "OK";
