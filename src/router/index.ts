@@ -20,15 +20,14 @@ import { AuthHandlerClass } from "../api/handler/AuthHandler";
 
 const APIRouter = Router();
 
-/** ミドルウェア： */
+// TODO:バリデーションのミドルウェアの追加
+/** ミドルウェア */
 const AuthMiddleware = new AuthMiddlewareClass();
 /** ハンドラー */
 const Auth = new AuthHandlerClass();
 const User = new UserHandlerClass();
 const HealthCheck = new HealthCheckHandlerClass();
 const Error = new ErrorHandlerClass();
-
-// TODO:バリデーションのミドルウェアの追加
 
 /** 認証 */
 /** ログインAPI */
