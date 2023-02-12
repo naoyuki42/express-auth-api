@@ -1,11 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import {
-  HTTP_STATUS_NO_CONTENT,
-  HTTP_STATUS_SERVER_ERROR,
-} from "../../../constants/HTTPStatus";
-import { SERVER_ERROR } from "../../../constants/Message";
-import { ResponseError } from "../../../types/response";
+import { HTTP_STATUS_NO_CONTENT } from "../../../constants/HTTPStatus";
 import { subStringToken } from "../../../common/token/subStringToken";
 import { verifyToken } from "../../../common/token/verifyToken";
 import { logoutModel } from "./model";
@@ -34,18 +29,10 @@ export const logoutHandler = async (
       .catch((err) => {
         throw err;
       });
+    // DBからアクセストークンの削除
     await logoutModel(userName);
     res.status(HTTP_STATUS_NO_CONTENT).json();
   } catch (err: unknown) {
     next(err);
-    // TODO:エラーハンドリングの共通化
-    // console.error(err);
-    // const response: ResponseError = {
-    //   error: {
-    //     code: HTTP_STATUS_SERVER_ERROR,
-    //     message: SERVER_ERROR,
-    //   },
-    // };
-    // res.status(HTTP_STATUS_SERVER_ERROR).json(response);
   }
 };

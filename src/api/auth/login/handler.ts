@@ -1,16 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { compare, hash } from "bcrypt";
+import { compare } from "bcrypt";
 
 import { createToken } from "./service/createToken";
 import { setTokenModel, userGetAuthModel } from "./model";
 import { TOKEN_EXPIRES_IN } from "../../../config/env";
-import {
-  HTTP_STATUS_OK,
-  HTTP_STATUS_SERVER_ERROR,
-  HTTP_STATUS_UNAUTHORIZED,
-} from "../../../constants/HTTPStatus";
-import { SERVER_ERROR, UNAUTHORIZED } from "../../../constants/Message";
-import { ResponseLogin, ResponseError } from "../../../types/response";
+import { HTTP_STATUS_OK } from "../../../constants/HTTPStatus";
+import { UNAUTHORIZED } from "../../../constants/Message";
+import { ResponseLogin } from "../../../types/response";
 
 export const loginHandler = async (
   req: Request,
@@ -34,24 +30,5 @@ export const loginHandler = async (
     res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {
     next(err);
-    // TODO:エラーハンドリングの共通化
-    // console.error(err);
-    // if (err instanceof Error && err.message === UNAUTHORIZED) {
-    //   const response: ResponseError = {
-    //     error: {
-    //       code: HTTP_STATUS_UNAUTHORIZED,
-    //       message: UNAUTHORIZED,
-    //     },
-    //   };
-    //   res.status(HTTP_STATUS_UNAUTHORIZED).json(response);
-    // } else {
-    //   const response: ResponseError = {
-    //     error: {
-    //       code: HTTP_STATUS_SERVER_ERROR,
-    //       message: SERVER_ERROR,
-    //     },
-    //   };
-    //   res.status(HTTP_STATUS_SERVER_ERROR).json(response);
-    // }
   }
 };
