@@ -1,4 +1,4 @@
-import mysql, { RowDataPacket } from "mysql2/promise";
+import { createConnection, RowDataPacket } from "mysql2/promise";
 
 import database from "../../../config/database";
 import {
@@ -10,7 +10,7 @@ export const userGetAuthModel = async (
   userName: string
 ): Promise<RowDataPacket> => {
   const params = [userName];
-  const connection = await mysql.createConnection(database);
+  const connection = await createConnection(database);
   const [rows] = await connection.query<RowDataPacket[]>(
     QUERY_USER_GET_LOGIN,
     params
@@ -24,7 +24,7 @@ export const setTokenModel = async (
   token: string
 ): Promise<void> => {
   const params = [token, userId];
-  const connection = await mysql.createConnection(database);
+  const connection = await createConnection(database);
   await connection.query<RowDataPacket[]>(QUERY_USER_PUT_LOGIN, params);
   connection.end();
 };

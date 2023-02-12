@@ -36,7 +36,14 @@ export const authMiddleware = async (
         throw err;
       });
     // DBからアクセストークンの取得
-    const { token } = await getTokenModel(userName);
+    const token = await getTokenModel(userName).then((result) => {
+      if (result !== undefined) {
+        if ("token" in result) {
+          return result.token;
+        }
+      }
+      throw new JsonWebTokenError(FORBIDDEN);
+    });
     // リクエスト内のアクセストークンとDBに保存されているアクセストークンの検証
     if (accessToken === token) {
       next();

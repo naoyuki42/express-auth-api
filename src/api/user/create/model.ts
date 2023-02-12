@@ -1,4 +1,4 @@
-import mysql, { ResultSetHeader } from "mysql2/promise";
+import { createConnection, ResultSetHeader } from "mysql2/promise";
 
 import database from "../../../config/database";
 import { QUERY_USER_CREATE } from "../../../constants/Query";
@@ -8,7 +8,7 @@ export const userCreateModel = async (
   password: string
 ): Promise<ResultSetHeader> => {
   const params = [userName, password];
-  const connection = await mysql.createConnection(database);
+  const connection = await createConnection(database);
   const [result] = await connection.execute<ResultSetHeader>(
     QUERY_USER_CREATE,
     params

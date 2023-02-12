@@ -8,6 +8,8 @@ export const QUERY_USER_GET_TOKEN = "SELECT token FROM user WHERE name = ?";
 /** ユーザー作成 */
 export const QUERY_USER_CREATE =
   "INSERT INTO user (name, password, token) VALUES (?, ?, NULL)";
+/** ユーザー削除 */
+export const QUERY_USER_DELETE = "DELETE FROM user WHERE id = ?";
 /** ユーザー更新（ログイン） */
 export const QUERY_USER_PUT_LOGIN = "UPDATE user SET token = ? WHERE id = ?";
 /** ユーザー更新（ログアウト） */

@@ -8,5 +8,7 @@ export const URI_AUTH_LOGOUT = "/auth/logout";
 export const URI_USER_GET = "/user/:userId";
 /** ユーザー作成API */
 export const URI_USER_CREATE = "/user";
+/** ユーザー削除API */
+export const URI_USER_DELETE = "/user/:userId";
 /** ヘルスチェックAPI */
 export const URI_HEALTH_CHECK = "/health";
