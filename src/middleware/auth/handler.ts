@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
-import { verifyToken } from "./service/verifyToken";
-import { subStringToken } from "./service/subStringToken";
+import { verifyToken } from "../../common/token/verifyToken";
+import { subStringToken } from "../../common/token/subStringToken";
 import { getTokenModel } from "./model";
 import {
   HTTP_STATUS_FORBIDDEN,
@@ -48,14 +48,18 @@ export const authMiddleware = async (
     console.error(err);
     if (err instanceof (JsonWebTokenError || TokenExpiredError)) {
       const response: ResponseError = {
-        code: HTTP_STATUS_FORBIDDEN,
-        message: FORBIDDEN,
+        error: {
+          code: HTTP_STATUS_FORBIDDEN,
+          message: FORBIDDEN,
+        },
       };
       res.status(HTTP_STATUS_FORBIDDEN).json(response);
     } else {
       const response: ResponseError = {
-        code: HTTP_STATUS_SERVER_ERROR,
-        message: SERVER_ERROR,
+        error: {
+          code: HTTP_STATUS_SERVER_ERROR,
+          message: SERVER_ERROR,
+        },
       };
       res.status(HTTP_STATUS_SERVER_ERROR).json(response);
     }

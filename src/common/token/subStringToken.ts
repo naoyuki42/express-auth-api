@@ -1,7 +1,7 @@
 import { JsonWebTokenError } from "jsonwebtoken";
 
-import { AUTH_TOKEN_TYPE } from "../../../config/env";
-import { FORBIDDEN } from "../../../constants/Message";
+import { AUTH_TOKEN_TYPE } from "../../config/env";
+import { FORBIDDEN } from "../../constants/Message";
 
 export const subStringToken = (
   authHeader: string | undefined

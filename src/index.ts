@@ -1,7 +1,7 @@
 import Express from "express";
 
-import router from "./router";
 import { PORT } from "./config/env";
+import { router } from "./router";
 
 const app = Express();
 

@@ -21,7 +21,9 @@ import { authMiddleware } from "../middleware/auth/handler";
 
 const APIRouter = Router();
 
-// TODO: バリデーションのミドルウェアの追加
+// TODO:ユーザー削除APIの追加
+// TODO:モデル、サービスのクラス化
+// TODO:バリデーションのミドルウェアの追加
 
 /** 認証 */
 /** ログインAPI */
@@ -39,6 +41,4 @@ APIRouter.post(URI_USER_CREATE, userCreateHandler);
 /** ヘルスチェックAPI */
 APIRouter.get(URI_HEALTH_CHECK, healthCheckHandler);
 
-const router = Router().use(URI_PREFIX_API, APIRouter);
-
-export default router;
+export const router = Router().use(URI_PREFIX_API, APIRouter);

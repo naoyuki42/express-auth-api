@@ -2,6 +2,8 @@
 export const HTTP_STATUS_OK = 200;
 /** HTTPステータス：201 */
 export const HTTP_STATUS_CREATED = 201;
+/** HTTPステータス：204 */
+export const HTTP_STATUS_NO_CONTENT = 204;
 /** HTTPステータス：401 */
 export const HTTP_STATUS_UNAUTHORIZED = 401;
 /** HTTPステータス：403 */

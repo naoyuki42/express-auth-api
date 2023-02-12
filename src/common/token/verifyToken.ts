@@ -1,7 +1,7 @@
 import { verify, JwtPayload } from "jsonwebtoken";
 
-import { JWT_SECRET_KEY } from "../../../config/env";
-import { FORBIDDEN } from "../../../constants/Message";
+import { JWT_SECRET_KEY } from "../../config/env";
+import { FORBIDDEN } from "../../constants/Message";
 
 export const verifyToken = async (
   token: string
