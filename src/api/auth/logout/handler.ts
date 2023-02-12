@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import {
   HTTP_STATUS_NO_CONTENT,
@@ -12,7 +12,8 @@ import { logoutModel } from "./model";
 
 export const logoutHandler = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
   try {
     // Authorizationヘッダーからアクセストークンを抽出
@@ -36,14 +37,15 @@ export const logoutHandler = async (
     await logoutModel(userName);
     res.status(HTTP_STATUS_NO_CONTENT).json();
   } catch (err: unknown) {
+    next(err);
     // TODO:エラーハンドリングの共通化
-    console.error(err);
-    const response: ResponseError = {
-      error: {
-        code: HTTP_STATUS_SERVER_ERROR,
-        message: SERVER_ERROR,
-      },
-    };
-    res.status(HTTP_STATUS_SERVER_ERROR).json(response);
+    // console.error(err);
+    // const response: ResponseError = {
+    //   error: {
+    //     code: HTTP_STATUS_SERVER_ERROR,
+    //     message: SERVER_ERROR,
+    //   },
+    // };
+    // res.status(HTTP_STATUS_SERVER_ERROR).json(response);
   }
 };

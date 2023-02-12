@@ -1,17 +1,14 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { hash } from "bcrypt";
 
 import { userCreateModel } from "./model";
-import {
-  HTTP_STATUS_CREATED,
-  HTTP_STATUS_SERVER_ERROR,
-} from "../../../constants/HTTPStatus";
-import { SERVER_ERROR } from "../../../constants/Message";
-import { ResponseUserCreate, ResponseError } from "../../../types/response";
+import { HTTP_STATUS_CREATED } from "../../../constants/HTTPStatus";
+import { ResponseUserCreate } from "../../../types/response";
 
 export const userCreateHandler = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const hashPassword = await hash(req.body.password, 10);
@@ -21,13 +18,6 @@ export const userCreateHandler = async (
     };
     res.status(HTTP_STATUS_CREATED).json(response);
   } catch (err: unknown) {
-    console.error(err);
-    const response: ResponseError = {
-      error: {
-        code: HTTP_STATUS_SERVER_ERROR,
-        message: SERVER_ERROR,
-      },
-    };
-    res.status(HTTP_STATUS_SERVER_ERROR).json(response);
+    next(err);
   }
 };

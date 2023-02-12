@@ -1,16 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { userGetModel } from "./model";
-import {
-  HTTP_STATUS_OK,
-  HTTP_STATUS_SERVER_ERROR,
-} from "../../../constants/HTTPStatus";
-import { SERVER_ERROR } from "../../../constants/Message";
-import { ResponseError, ResponseUserGet } from "../../../types/response";
+import { HTTP_STATUS_OK } from "../../../constants/HTTPStatus";
+import { ResponseUserGet } from "../../../types/response";
 
 export const userGetHandler = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const { id, name } = await userGetModel(Number(req.params.userId));
@@ -20,13 +17,6 @@ export const userGetHandler = async (
     };
     res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {
-    console.error(err);
-    const response: ResponseError = {
-      error: {
-        code: HTTP_STATUS_SERVER_ERROR,
-        message: SERVER_ERROR,
-      },
-    };
-    res.status(HTTP_STATUS_SERVER_ERROR).json(response);
+    next(err);
   }
 };

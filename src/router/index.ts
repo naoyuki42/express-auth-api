@@ -19,6 +19,7 @@ import { userDeleteHandler } from "../api/user/delete/handler";
 /** ハンドラー：ヘルスチェック */
 import { healthCheckHandler } from "../api/healthCheck/handler";
 /** ハンドラー：エラー */
+import { errorHandler } from "../api/error/error/handler";
 import { notFoundHandler } from "../api/error/notFound/handler";
 /** ミドルウェア：認証 */
 import { authMiddleware } from "../middleware/auth/handler";
@@ -48,5 +49,6 @@ APIRouter.get(URI_HEALTH_CHECK, healthCheckHandler);
 
 /** エラー */
 APIRouter.use(notFoundHandler);
+APIRouter.use(errorHandler);
 
 export const router = Router().use(URI_PREFIX_API, APIRouter);

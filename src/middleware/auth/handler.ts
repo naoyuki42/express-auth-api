@@ -1,15 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import { JsonWebTokenError } from "jsonwebtoken";
 
 import { verifyToken } from "../../common/token/verifyToken";
 import { subStringToken } from "../../common/token/subStringToken";
 import { getTokenModel } from "./model";
-import {
-  HTTP_STATUS_FORBIDDEN,
-  HTTP_STATUS_SERVER_ERROR,
-} from "../../constants/HTTPStatus";
-import { FORBIDDEN, SERVER_ERROR } from "../../constants/Message";
-import { ResponseError } from "../../types/response";
+import { FORBIDDEN } from "../../constants/Message";
 
 export const authMiddleware = async (
   req: Request,
@@ -50,25 +45,7 @@ export const authMiddleware = async (
     } else {
       throw new JsonWebTokenError(FORBIDDEN);
     }
-  } catch (err: unknown) {
-    // TODO:エラーレスポンスの共通化
-    console.error(err);
-    if (err instanceof (JsonWebTokenError || TokenExpiredError)) {
-      const response: ResponseError = {
-        error: {
-          code: HTTP_STATUS_FORBIDDEN,
-          message: FORBIDDEN,
-        },
-      };
-      res.status(HTTP_STATUS_FORBIDDEN).json(response);
-    } else {
-      const response: ResponseError = {
-        error: {
-          code: HTTP_STATUS_SERVER_ERROR,
-          message: SERVER_ERROR,
-        },
-      };
-      res.status(HTTP_STATUS_SERVER_ERROR).json(response);
-    }
+  } catch (err) {
+    next(err);
   }
 };
