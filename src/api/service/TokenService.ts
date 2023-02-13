@@ -7,7 +7,7 @@ import {
 } from "../../config/env";
 import { FORBIDDEN } from "../../constants/Message";
 
-export class TokenServiceClass {
+export class TokenService {
   /** トークンの作成 */
   async create(userName: string): Promise<string> {
     const payload = {

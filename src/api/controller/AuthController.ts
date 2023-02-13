@@ -2,8 +2,8 @@
 import { Request, Response, NextFunction } from "express";
 import { compare } from "bcrypt";
 /** クラス */
-import { AuthModelClass } from "../model/AuthModel";
-import { TokenServiceClass } from "../service/TokenService";
+import { AuthModel } from "../model/AuthModel";
+import { TokenService } from "../service/TokenService";
 /** 定数 */
 import { TOKEN_EXPIRES_IN } from "../../config/env";
 import {
@@ -14,15 +14,15 @@ import { UNAUTHORIZED } from "../../constants/Message";
 /** 型 */
 import { ResponseLogin } from "../../types/response";
 
-export class AuthHandlerClass {
+export class AuthController {
   /** ログイン */
   async loginHandler(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const Auth = new AuthModelClass();
-    const Token = new TokenServiceClass();
+    const Auth = new AuthModel();
+    const Token = new TokenService();
     try {
       // ログインユーザー情報の取得
       const { id, password } = await Auth.getAuthUser(req.body.userName)
@@ -57,8 +57,8 @@ export class AuthHandlerClass {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const Auth = new AuthModelClass();
-    const Token = new TokenServiceClass();
+    const Auth = new AuthModel();
+    const Token = new TokenService();
     try {
       // Authorizationヘッダーからアクセストークンを抽出
       const accessToken = await Token.subString(

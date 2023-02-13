@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 import { hash } from "bcrypt";
 /** クラス */
-import { UserModelClass } from "../model/UserModel";
+import { UserModel } from "../model/UserModel";
 /** 定数 */
 import {
   HTTP_STATUS_CREATED,
@@ -12,14 +12,14 @@ import {
 /** 型 */
 import { ResponseUserCreate, ResponseUserGet } from "../../types/response";
 
-export class UserHandlerClass {
+export class UserController {
   /** ユーザー取得 */
   async getHandler(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const User = new UserModelClass();
+    const User = new UserModel();
     try {
       const { id, name } = await User.get(Number(req.params.userId));
       const response: ResponseUserGet = {
@@ -37,7 +37,7 @@ export class UserHandlerClass {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const User = new UserModelClass();
+    const User = new UserModel();
     try {
       const hashPassword = await hash(req.body.password, 10);
       const { insertId } = await User.create(req.body.userName, hashPassword);
@@ -53,7 +53,7 @@ export class UserHandlerClass {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const User = new UserModelClass();
+    const User = new UserModel();
     try {
       await User.delete(Number(req.params.userId));
       res.status(HTTP_STATUS_NO_CONTENT).json();

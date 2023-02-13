@@ -8,7 +8,7 @@ import {
   QUERY_USER_PUT_LOGOUT,
 } from "../../constants/Query";
 
-export class AuthModelClass {
+export class AuthModel {
   /** 認証用ユーザー情報の取得 */
   async getAuthUser(userName: string): Promise<RowDataPacket> {
     const params = [userName];

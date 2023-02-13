@@ -11,7 +11,7 @@ import {
   QUERY_USER_GET,
 } from "../../constants/Query";
 
-export class UserModelClass {
+export class UserModel {
   /** ユーザーの取得 */
   async get(userId: number): Promise<RowDataPacket> {
     const params = [userId];

@@ -2,20 +2,20 @@
 import { Request, Response, NextFunction } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
 /** クラス */
-import { AuthModelClass } from "../model/AuthModel";
-import { TokenServiceClass } from "../service/TokenService";
+import { AuthModel } from "../model/AuthModel";
+import { TokenService } from "../service/TokenService";
 /** 定数 */
 import { FORBIDDEN } from "../../constants/Message";
 
-export class AuthMiddlewareClass {
+export class AuthMiddleware {
   /** 認証ミドルウェア */
   async authenticate(
     req: Request,
     _res: Response,
     next: NextFunction
   ): Promise<void> {
-    const Auth = new AuthModelClass();
-    const Token = new TokenServiceClass();
+    const Auth = new AuthModel();
+    const Token = new TokenService();
     try {
       // Authorizationヘッダーからアクセストークンを抽出
       const accessToken = await Token.subString(

@@ -17,7 +17,7 @@ import {
 /** 型 */
 import { ResponseError } from "../../types/response";
 
-export class ErrorHandlerClass {
+export class ErrorController {
   /** エラー */
   errorHandler(
     err: Error,
