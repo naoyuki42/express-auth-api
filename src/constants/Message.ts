@@ -1,3 +1,7 @@
+/** メッセージ定義：バリデーションエラー */
+export const BAD_REQUEST = "bad request";
+/** メッセージ定義：バリデーション失敗 */
+export const FAILED_TO_VALIDATE = "failed to validate";
 /** メッセージ定義：サーバーエラー */
 export const SERVER_ERROR = "server error";
 /** メッセージ定義：認証失敗 */
