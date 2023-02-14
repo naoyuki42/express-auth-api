@@ -17,10 +17,12 @@ import { UserController } from "../api/controller/UserController";
 import { HealthCheckController } from "../api/controller/HealthCheckController";
 import { ErrorController } from "../api/controller/ErrorController";
 import { AuthController } from "../api/controller/AuthController";
+import { ValidateMiddleware } from "../api/middleware/validation/ValidationMiddleware";
 
 const APIRouter = Router();
 
 /** ミドルウェア */
+const ValidateMiddle = new ValidateMiddleware();
 const AuthMiddle = new AuthMiddleware();
 /** コントローラー */
 const Auth = new AuthController();

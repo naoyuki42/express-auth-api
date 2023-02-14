@@ -15,23 +15,17 @@ import { UNAUTHORIZED } from "../../constants/Message";
 import { ResponseLogin } from "../../types/response";
 
 export class AuthController {
-  Auth: AuthModel;
-  Token: TokenService;
-
-  constructor() {
-    this.Auth = new AuthModel();
-    this.Token = new TokenService();
-  }
-
   /** ログイン */
   async loginHandler(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    const Auth = new AuthModel();
+    const Token = new TokenService();
     try {
       // ログインユーザー情報の取得
-      const { id, password } = await this.Auth.getAuthUser(req.body.userName)
+      const { id, password } = await Auth.getAuthUser(req.body.userName)
         .then((result) => {
           if (result !== undefined && "id" && "password" in result) {
             return result;
@@ -45,9 +39,9 @@ export class AuthController {
       const isPasswordCompare = await compare(req.body.password, password);
       if (!isPasswordCompare) throw new Error(UNAUTHORIZED);
       // アクセストークンの発行
-      const token = await this.Token.create(req.body.userName);
+      const token = await Token.create(req.body.userName);
       // アクセストークンの保存
-      await this.Auth.setToken(id, token);
+      await Auth.setToken(id, token);
       const response: ResponseLogin = {
         accessToken: token,
         expired: TOKEN_EXPIRES_IN,
@@ -63,15 +57,17 @@ export class AuthController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    const Auth = new AuthModel();
+    const Token = new TokenService();
     try {
       // Authorizationヘッダーからアクセストークンを抽出
-      const accessToken = await this.Token.subString(
+      const accessToken = await Token.subString(
         req.headers.authorization
       ).catch((err) => {
         throw err;
       });
       // アクセストークンのデコード
-      const userName = await this.Token.verify(accessToken)
+      const userName = await Token.verify(accessToken)
         .then((decoded) => {
           if (typeof decoded !== "string" && "user" in decoded) {
             return decoded.user;
@@ -83,7 +79,7 @@ export class AuthController {
           throw err;
         });
       // DBからアクセストークンの削除
-      await this.Auth.logout(userName);
+      await Auth.logout(userName);
       res.status(HTTP_STATUS_NO_CONTENT).json();
     } catch (err: unknown) {
       next(err);

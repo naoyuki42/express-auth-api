@@ -26,7 +26,7 @@ export class ErrorController {
     _next: NextFunction
   ): Promise<void> {
     // エラーの種類の取得
-    const { code, message } = await this.getErrorType(err);
+    const { code, message } = await getErrorType(err);
     // エラーログの出力
     console.error(err);
     // エラーのレスポンス
@@ -74,3 +74,29 @@ export class ErrorController {
     }
   }
 }
+
+/** エラーの種類の判定 */
+// TODO:サービスクラスに切り出し
+const getErrorType = async (
+  err: Error
+): Promise<{ code: number; message: string }> => {
+  if (err.message === UNAUTHORIZED) {
+    // 認証失敗
+    return {
+      code: HTTP_STATUS_UNAUTHORIZED,
+      message: UNAUTHORIZED,
+    };
+  } else if (err instanceof (JsonWebTokenError || TokenExpiredError)) {
+    // 認可されていない
+    return {
+      code: HTTP_STATUS_FORBIDDEN,
+      message: FORBIDDEN,
+    };
+  } else {
+    // サーバーエラー
+    return {
+      code: HTTP_STATUS_SERVER_ERROR,
+      message: SERVER_ERROR,
+    };
+  }
+};
