@@ -49,6 +49,7 @@ export class ErrorController {
     res.status(HTTP_STATUS_NOT_FOUND).json(response);
   };
   /** エラーの種類の判定 */
+  // TODO:サービスクラスに切り出し
   private async getErrorType(
     err: Error
   ): Promise<{ code: number; message: string }> {

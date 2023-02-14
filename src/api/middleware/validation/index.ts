@@ -58,6 +58,7 @@ export class ValidateMiddleware {
     }
   }
   /** バリデーションルールの取得 */
+  // TODO:サービスクラスに切り出し
   private async getRuleSchema(path: string): Promise<Schema | undefined> {
     switch (path) {
       case URI_AUTH_LOGIN:
