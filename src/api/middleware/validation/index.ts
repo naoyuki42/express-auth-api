@@ -1,10 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import {
-  Result,
-  Schema,
-  checkSchema,
-  validationResult,
-} from "express-validator";
+import { Schema, checkSchema, validationResult } from "express-validator";
 
 import {
   HealthCheckRuleSchema,
@@ -50,20 +45,16 @@ export class ValidateMiddleware {
     next: NextFunction
   ): Promise<void> {
     try {
-      const error: Result = await validationResult(req);
-      if (!error) {
-        next();
-      } else {
-        const response: ResponseError = {
-          error: {
-            code: HTTP_STATUS_BAD_REQUEST,
-            message: BAD_REQUEST,
-          },
-        };
-        res.status(HTTP_STATUS_BAD_REQUEST).json(response);
-      }
+      await validationResult(req).throw();
+      next();
     } catch (err: unknown) {
-      next(err);
+      const response: ResponseError = {
+        error: {
+          code: HTTP_STATUS_BAD_REQUEST,
+          message: BAD_REQUEST,
+        },
+      };
+      res.status(HTTP_STATUS_BAD_REQUEST).json(response);
     }
   }
   /** バリデーションルールの取得 */
