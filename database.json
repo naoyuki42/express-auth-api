@@ -1,8 +1,0 @@
-{
-  "dev": {
-    "driver": "mysql",
-    "user": "auth",
-    "password": "auth",
-    "database": "auth"
-  }
-}

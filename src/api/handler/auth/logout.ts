@@ -15,25 +15,21 @@ export const logoutHandler = async (
   const Token = new TokenService();
   try {
     // Authorizationヘッダーからアクセストークンを抽出
-    const accessToken = await Token.subString(req.headers.authorization).catch(
-      (err) => {
-        throw err;
-      }
-    );
+    const accessToken = await Token.subString(req.headers.authorization);
+    // アクセストークンを抽出出来なかった場合エラー
+    if (accessToken === undefined) throw new Error();
+
     // アクセストークンのデコード
-    const userName = await Token.verify(accessToken)
-      .then((decoded) => {
-        if (typeof decoded !== "string" && "user" in decoded) {
-          return decoded.user;
-        } else {
-          throw new Error();
-        }
-      })
-      .catch((err) => {
-        throw err;
-      });
+    const decoded = await Token.verify(accessToken);
+    // デコード結果が文字列または"user"キーが存在しない場合エラー
+    if (typeof decoded === "string" || !("user" in decoded)) throw new Error();
+
     // DBからアクセストークンの削除
-    await Auth.logout(userName);
+    const logoutUser = await Auth.logout(decoded.user);
+    // アクセストークンを削除出来なかった場合、エラー
+    if (logoutUser === null) throw new Error();
+
+    // レスポンス
     res.status(HTTP_STATUS_NO_CONTENT).json();
   } catch (err: unknown) {
     next(err);

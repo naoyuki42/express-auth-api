@@ -12,6 +12,7 @@ export const healthCheckHandler = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    // レスポンス
     const response: ResponseHealthCheck = { health: HEALTH_CHECK_OK };
     res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {

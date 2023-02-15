@@ -7,6 +7,7 @@ import { ResponseError } from "../../../types/response";
 
 /** ハンドラー：NotFound */
 export const notFoundHandler = (_req: Request, res: Response): void => {
+  // レスポンス
   const response: ResponseError = {
     error: {
       code: HTTP_STATUS_NOT_FOUND,

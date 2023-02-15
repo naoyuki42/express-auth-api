@@ -14,10 +14,15 @@ export const userGetHandler = async (
 ): Promise<void> => {
   const User = new UserModel();
   try {
-    const { id, name } = await User.get(Number(req.params.userId));
+    // ユーザーの取得
+    const user = await User.get(Number(req.params.userId));
+    // ユーザーを取得出来なかった場合エラー
+    if (user === null) throw new Error();
+
+    // レスポンス
     const response: ResponseUserGet = {
-      userId: id,
-      userName: name,
+      userId: user.id,
+      userName: user.name,
     };
     res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {

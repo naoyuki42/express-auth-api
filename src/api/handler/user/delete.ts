@@ -12,7 +12,12 @@ export const userDeleteHandler = async (
 ): Promise<void> => {
   const User = new UserModel();
   try {
-    await User.delete(Number(req.params.userId));
+    // ユーザーの削除
+    const deleteUser = await User.delete(Number(req.params.userId));
+    // ユーザーが削除出来なかった場合エラー
+    if (deleteUser === null) throw new Error();
+
+    // レスポンス
     res.status(HTTP_STATUS_NO_CONTENT).json();
   } catch (err: unknown) {
     next(err);

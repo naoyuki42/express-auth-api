@@ -16,35 +16,24 @@ export const authMiddleware = async (
   const Token = new TokenService();
   try {
     // Authorizationヘッダーからアクセストークンを抽出
-    const accessToken = await Token.subString(req.headers.authorization).catch(
-      (err) => {
-        throw err;
-      }
-    );
-    // アクセストークンの有効性の検証
-    const userName = await Token.verify(accessToken)
-      .then((decoded) => {
-        if (typeof decoded !== "string" && "user" in decoded) {
-          return decoded.user;
-        }
-        throw new JsonWebTokenError(FORBIDDEN);
-      })
-      .catch((err) => {
-        throw err;
-      });
+    const accessToken = await Token.subString(req.headers.authorization);
+    // アクセストークンを抽出出来なかった場合エラー
+    if (accessToken === undefined) throw new Error();
+
+    // アクセストークンのデコード
+    const decoded = await Token.verify(accessToken);
+    // デコード結果が文字列または"user"キーが存在しない場合エラー
+    if (typeof decoded === "string" || !("user" in decoded)) throw new Error();
+
     // DBからアクセストークンの取得
-    const token = await Auth.getToken(userName).then((result) => {
-      if (result !== undefined) {
-        if ("token" in result) {
-          return result.token;
-        }
-      }
-      throw new JsonWebTokenError(FORBIDDEN);
-    });
-    // リクエスト内のアクセストークンとDBに保存されているアクセストークンの検証
-    if (accessToken !== token) {
-      throw new JsonWebTokenError(FORBIDDEN);
-    }
+    const result = await Auth.getToken(decoded.user);
+    // DBからアクセストークンが取得出来なかったらエラー
+    if (result === null) throw new JsonWebTokenError(FORBIDDEN);
+
+    // アクセストークンが一致しない場合エラー
+    if (accessToken !== result.token) throw new JsonWebTokenError(FORBIDDEN);
+
+    // 認証の成功
     next();
   } catch (err) {
     next(err);
