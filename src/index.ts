@@ -6,6 +6,7 @@ import { router } from "./router";
 // TODO:バリデーションのミドルウェアの追加
 // TODO:テストコードの追加
 // TODO:prismaの導入
+// TODO:passportの導入
 // TODO:インポートを絶対パスに修正
 const app = Express();
 

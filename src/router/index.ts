@@ -11,46 +11,40 @@ import {
   URI_PREFIX_API,
 } from "../constants/URI";
 /** ミドルウェア */
-import { AuthMiddleware } from "../api/middleware/AuthMiddleware";
-/** コントローラー */
-import { UserController } from "../api/controller/UserController";
-import { HealthCheckController } from "../api/controller/HealthCheckController";
-import { ErrorController } from "../api/controller/ErrorController";
-import { AuthController } from "../api/controller/AuthController";
-import { ValidateMiddleware } from "../api/middleware/validation/ValidationMiddleware";
+import { authMiddleware } from "../api/middleware/auth";
+/** ハンドラー */
+import { loginHandler } from "../api/handler/auth/login";
+import { logoutHandler } from "../api/handler/auth/logout";
+import { userGetHandler } from "../api/handler/user/get";
+import { userCreateHandler } from "../api/handler/user/create";
+import { userDeleteHandler } from "../api/handler/user/delete";
+import { healthCheckHandler } from "../api/handler/healthCheck";
+import { errorHandler } from "../api/handler/error/error";
+import { notFoundHandler } from "../api/handler/error/notFound";
 
 const APIRouter = Router();
 
-/** ミドルウェア */
-const ValidateMiddle = new ValidateMiddleware();
-const AuthMiddle = new AuthMiddleware();
-/** コントローラー */
-const Auth = new AuthController();
-const User = new UserController();
-const HealthCheck = new HealthCheckController();
-const Error = new ErrorController();
-
 /** 認証 */
 /** ログインAPI */
-APIRouter.use(URI_AUTH_LOGIN, Auth.loginHandler);
+APIRouter.use(URI_AUTH_LOGIN, loginHandler);
 /** ログアウトAPI */
-APIRouter.use(URI_AUTH_LOGOUT, AuthMiddle.authenticate, Auth.logoutHandler);
+APIRouter.use(URI_AUTH_LOGOUT, authMiddleware, logoutHandler);
 
 /** ユーザー */
 /** ユーザー取得API */
-APIRouter.get(URI_USER_GET, AuthMiddle.authenticate, User.getHandler);
+APIRouter.get(URI_USER_GET, authMiddleware, userGetHandler);
 /** ユーザー作成API */
-APIRouter.post(URI_USER_CREATE, User.createHandler);
+APIRouter.post(URI_USER_CREATE, userCreateHandler);
 /** ユーザー削除API */
-APIRouter.delete(URI_USER_DELETE, AuthMiddle.authenticate, User.deleteHandler);
+APIRouter.delete(URI_USER_DELETE, authMiddleware, userDeleteHandler);
 
 /** ヘルスチェック */
 /** ヘルスチェックAPI */
-APIRouter.get(URI_HEALTH_CHECK, HealthCheck.healthCheckHandler);
+APIRouter.get(URI_HEALTH_CHECK, healthCheckHandler);
 
 /** Not Found */
-APIRouter.use(Error.notFoundHandler);
+APIRouter.use(notFoundHandler);
 /** エラー */
-APIRouter.use(Error.errorHandler);
+APIRouter.use(errorHandler);
 
 export const router = Router().use(URI_PREFIX_API, APIRouter);
