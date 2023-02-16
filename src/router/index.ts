@@ -1,5 +1,6 @@
 /** ライブラリ */
 import { Router } from "express";
+import { checkSchema } from "express-validator";
 /** URI */
 import {
   URI_AUTH_LOGIN,
@@ -12,6 +13,14 @@ import {
 } from "../constants/URI";
 /** ミドルウェア */
 import { authMiddleware } from "../api/middleware/auth";
+import { validationMiddleware } from "../api/middleware/validation";
+/** バリデーションスキーマ */
+import {
+  LoginSchema,
+  UserCreateSchema,
+  UserDeleteSchema,
+  UserGetSchema,
+} from "../api/middleware/validationSchema";
 /** ハンドラー */
 import { loginHandler } from "../api/handler/auth/login";
 import { logoutHandler } from "../api/handler/auth/logout";
@@ -26,17 +35,39 @@ const APIRouter = Router();
 
 /** 認証 */
 /** ログインAPI */
-APIRouter.use(URI_AUTH_LOGIN, loginHandler);
+APIRouter.use(
+  URI_AUTH_LOGIN,
+  checkSchema(LoginSchema),
+  validationMiddleware,
+  loginHandler
+);
 /** ログアウトAPI */
 APIRouter.use(URI_AUTH_LOGOUT, authMiddleware, logoutHandler);
 
 /** ユーザー */
 /** ユーザー取得API */
-APIRouter.get(URI_USER_GET, authMiddleware, userGetHandler);
+APIRouter.get(
+  URI_USER_GET,
+  checkSchema(UserGetSchema),
+  validationMiddleware,
+  authMiddleware,
+  userGetHandler
+);
 /** ユーザー作成API */
-APIRouter.post(URI_USER_CREATE, userCreateHandler);
+APIRouter.post(
+  URI_USER_CREATE,
+  checkSchema(UserCreateSchema),
+  validationMiddleware,
+  userCreateHandler
+);
 /** ユーザー削除API */
-APIRouter.delete(URI_USER_DELETE, authMiddleware, userDeleteHandler);
+APIRouter.delete(
+  URI_USER_DELETE,
+  checkSchema(UserDeleteSchema),
+  validationMiddleware,
+  authMiddleware,
+  userDeleteHandler
+);
 
 /** ヘルスチェック */
 /** ヘルスチェックAPI */
