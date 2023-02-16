@@ -4,7 +4,7 @@ import { PORT } from "./env";
 import { router } from "./router";
 
 // TODO:テストコードの追加
-// TODO:passportの導入
+// TODO:paginationのAPIの追加
 
 const app = Express();
 
