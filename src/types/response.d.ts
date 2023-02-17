@@ -4,10 +4,12 @@ export type ResponseType<T> = {
   body?: T;
 };
 /** レスポンス定義：ログイン */
-export type ResponseLogin = {
+export type Login = {
   accessToken: string;
   expired: string;
 };
+/** レスポンス定義：ログアウト */
+export type Logout = never;
 /** レスポンス定義：ユーザー取得 */
 export type UserGet = {
   userId: number;
@@ -24,7 +26,7 @@ export type HealthCheck = {
   health: string;
 };
 /** レスポンス定義：エラー */
-export type ResponseError = {
+export type ResponseTypeError = {
   error: {
     code: number;
     message: string;

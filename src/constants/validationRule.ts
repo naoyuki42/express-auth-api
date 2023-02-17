@@ -1,7 +1,7 @@
 import { Schema } from "express-validator";
 
 /** バリデーションルール：ログイン */
-export const LoginSchema: Schema = {
+export const Login: Schema = {
   userName: {
     in: ["body"],
     isAlphanumeric: true,
@@ -12,14 +12,14 @@ export const LoginSchema: Schema = {
   },
 };
 /** バリデーションルール：ユーザー取得 */
-export const UserGetSchema: Schema = {
+export const UserGet: Schema = {
   userId: {
     in: ["params"],
     isInt: true,
   },
 };
 /** バリデーションルール：ユーザー作成 */
-export const UserCreateSchema: Schema = {
+export const UserCreate: Schema = {
   userName: {
     in: ["body"],
     isAlphanumeric: true,
@@ -30,7 +30,7 @@ export const UserCreateSchema: Schema = {
   },
 };
 /** バリデーションルール：ユーザー削除 */
-export const UserDeleteSchema: Schema = {
+export const UserDelete: Schema = {
   userId: {
     in: ["params"],
     isInt: true,

@@ -24,10 +24,8 @@ export class UserController {
   async userGet(req: Request): Promise<ResponseType<UserGet>> {
     // ユーザーの取得
     const user = await this.userModel.get(Number(req.params.userId));
-    // ユーザーを取得出来なかった場合エラー
     if (user === null) throw new Error();
 
-    // レスポンス
     const response: ResponseType<UserGet> = {
       status: HTTP_STATUS_OK,
       body: {
@@ -37,6 +35,7 @@ export class UserController {
     };
     return response;
   }
+
   /** ユーザー作成 */
   async userCreate(req: Request): Promise<ResponseType<UserCreate>> {
     // パスワードのハッシュ化
@@ -47,10 +46,8 @@ export class UserController {
       req.body.userName,
       hashedPassword
     );
-    // ユーザーが作成出来なかった場合エラー
     if (createUser === null) throw new Error();
 
-    // レスポンス
     const response: ResponseType<UserCreate> = {
       status: HTTP_STATUS_CREATED,
       body: {
@@ -63,10 +60,8 @@ export class UserController {
   async userDelete(req: Request): Promise<ResponseType<UserDelete>> {
     // ユーザーの削除
     const deleteUser = await this.userModel.delete(Number(req.params.userId));
-    // ユーザーが削除出来なかった場合エラー
     if (deleteUser === null) throw new Error();
 
-    // レスポンス
     const response: ResponseType<UserDelete> = {
       status: HTTP_STATUS_NO_CONTENT,
     };

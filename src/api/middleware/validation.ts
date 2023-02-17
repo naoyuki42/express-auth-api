@@ -4,7 +4,7 @@ import { validationResult } from "express-validator";
 import { HTTP_STATUS_BAD_REQUEST } from "../../constants/HTTPStatus";
 import { BAD_REQUEST } from "../../constants/Message";
 
-import { ResponseError } from "../../types/response";
+import { ResponseTypeError } from "../../types/response";
 
 export const validationMiddleware = async (
   req: Request,
@@ -15,8 +15,9 @@ export const validationMiddleware = async (
     await validationResult(req).throw();
     next();
   } catch (err: unknown) {
+    // TODO:エラーハンドリングの移植
     console.log(err);
-    const response: ResponseError = {
+    const response: ResponseTypeError = {
       error: {
         code: HTTP_STATUS_BAD_REQUEST,
         message: BAD_REQUEST,
