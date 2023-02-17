@@ -6,7 +6,10 @@ import { NOT_FOUND } from "../../../constants/Message";
 import { ResponseError } from "../../../types/response";
 
 /** ハンドラー：NotFound */
-export const notFoundHandler = (_req: Request, res: Response): void => {
+export const notFoundHandler = async (
+  _req: Request,
+  res: Response
+): Promise<void> => {
   // レスポンス
   const response: ResponseError = {
     error: {

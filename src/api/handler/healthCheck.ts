@@ -1,20 +1,16 @@
 import { Request, Response, NextFunction } from "express";
-
-import { HTTP_STATUS_OK } from "../../constants/HTTPStatus";
-import { HEALTH_CHECK_OK } from "../../constants/Message";
-
-import { ResponseHealthCheck } from "../../types/response";
+import { HealthCheckController } from "../controller/HealthCheckController";
 
 /** ハンドラー：ヘルスチェック */
 export const healthCheckHandler = async (
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    // レスポンス
-    const response: ResponseHealthCheck = { health: HEALTH_CHECK_OK };
-    res.status(HTTP_STATUS_OK).json(response);
+    const controller = new HealthCheckController();
+    const response = await controller.healthCheck(req);
+    res.status(response.status).json(response?.body);
   } catch (err: unknown) {
     next(err);
   }

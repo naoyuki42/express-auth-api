@@ -24,9 +24,11 @@ import {
 /** ハンドラー */
 import { loginHandler } from "../api/handler/auth/login";
 import { logoutHandler } from "../api/handler/auth/logout";
-import { userGetHandler } from "../api/handler/user/get";
-import { userCreateHandler } from "../api/handler/user/create";
-import { userDeleteHandler } from "../api/handler/user/delete";
+import {
+  userGetHandler,
+  userCreateHandler,
+  userDeleteHandler,
+} from "../api/handler/user";
 import { healthCheckHandler } from "../api/handler/healthCheck";
 import { errorHandler } from "../api/handler/error/error";
 import { notFoundHandler } from "../api/handler/error/notFound";
