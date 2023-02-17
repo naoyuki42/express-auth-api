@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { HealthCheckController } from "../controller/HealthCheckController";
+import { HTTP_STATUS_OK } from "../../constants/HTTPStatus";
 
 /** ハンドラー：ヘルスチェック */
 export const healthCheckHandler = async (
@@ -10,7 +11,7 @@ export const healthCheckHandler = async (
   try {
     const controller = new HealthCheckController();
     const response = await controller.healthCheck(req);
-    res.status(response.status).json(response?.body);
+    res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {
     next(err);
   }

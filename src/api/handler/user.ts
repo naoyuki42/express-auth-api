@@ -1,11 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { UserController } from "../controller/UserController";
 import {
-  ResponseType,
-  UserCreate,
-  UserDelete,
-  UserGet,
+  ResponseTypeUserCreate,
+  ResponseTypeUserGet,
 } from "../../types/response";
+import {
+  HTTP_STATUS_OK,
+  HTTP_STATUS_CREATED,
+  HTTP_STATUS_NO_CONTENT,
+} from "../../constants/HTTPStatus";
 
 /** ハンドラー：ユーザー取得 */
 export const userGetHandler = async (
@@ -15,8 +18,8 @@ export const userGetHandler = async (
 ): Promise<void> => {
   try {
     const controller = new UserController();
-    const response: ResponseType<UserGet> = await controller.userGet(req);
-    res.status(response.status).json(response?.body);
+    const response: ResponseTypeUserGet = await controller.userGet(req);
+    res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {
     next(err);
   }
@@ -30,8 +33,8 @@ export const userCreateHandler = async (
 ): Promise<void> => {
   try {
     const controller = new UserController();
-    const response: ResponseType<UserCreate> = await controller.userCreate(req);
-    res.status(response.status).json(response?.body);
+    const response: ResponseTypeUserCreate = await controller.userCreate(req);
+    res.status(HTTP_STATUS_CREATED).json(response);
   } catch (err: unknown) {
     next(err);
   }
@@ -45,8 +48,8 @@ export const userDeleteHandler = async (
 ): Promise<void> => {
   try {
     const controller = new UserController();
-    const response: ResponseType<UserDelete> = await controller.userDelete(req);
-    res.status(response.status).json(response?.body);
+    await controller.userDelete(req);
+    res.status(HTTP_STATUS_NO_CONTENT).json();
   } catch (err: unknown) {
     next(err);
   }

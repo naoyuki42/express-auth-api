@@ -15,7 +15,6 @@ export const validationMiddleware = async (
     await validationResult(req).throw();
     next();
   } catch (err: unknown) {
-    // TODO:エラーハンドリングの移植
     console.log(err);
     const response: ResponseTypeError = {
       error: {

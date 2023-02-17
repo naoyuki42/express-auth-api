@@ -33,7 +33,7 @@ export class TokenService {
     });
   }
   /** トークンの有効性の検証とデコード */
-  async verify(token: string): Promise<string | JwtPayload> {
+  verify(token: string): Promise<string | JwtPayload> {
     return new Promise((resolve, reject) => {
       verify(token, JWT_SECRET_KEY, (err, decoded) => {
         if (!err) {

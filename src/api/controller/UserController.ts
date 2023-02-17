@@ -2,15 +2,9 @@ import { Request } from "express";
 import { hash } from "bcrypt";
 import { UserModel } from "../model/UserModel";
 import {
-  HTTP_STATUS_CREATED,
-  HTTP_STATUS_NO_CONTENT,
-  HTTP_STATUS_OK,
-} from "../../constants/HTTPStatus";
-import {
-  ResponseType,
-  UserCreate,
-  UserDelete,
-  UserGet,
+  ResponseTypeUserCreate,
+  ResponseTypeUserDelete,
+  ResponseTypeUserGet,
 } from "../../types/response";
 
 export class UserController {
@@ -21,23 +15,20 @@ export class UserController {
   }
 
   /** ユーザー取得 */
-  async userGet(req: Request): Promise<ResponseType<UserGet>> {
+  async userGet(req: Request): Promise<ResponseTypeUserGet> {
     // ユーザーの取得
     const user = await this.userModel.get(Number(req.params.userId));
     if (user === null) throw new Error();
 
-    const response: ResponseType<UserGet> = {
-      status: HTTP_STATUS_OK,
-      body: {
-        userId: user.id,
-        userName: user.name,
-      },
+    const response: ResponseTypeUserGet = {
+      userId: user.id,
+      userName: user.name,
     };
     return response;
   }
 
   /** ユーザー作成 */
-  async userCreate(req: Request): Promise<ResponseType<UserCreate>> {
+  async userCreate(req: Request): Promise<ResponseTypeUserCreate> {
     // パスワードのハッシュ化
     const hashedPassword = await hash(req.body.password, 10);
 
@@ -48,23 +39,15 @@ export class UserController {
     );
     if (createUser === null) throw new Error();
 
-    const response: ResponseType<UserCreate> = {
-      status: HTTP_STATUS_CREATED,
-      body: {
-        userId: createUser.id,
-      },
+    const response: ResponseTypeUserCreate = {
+      userId: createUser.id,
     };
     return response;
   }
   /** ユーザー削除 */
-  async userDelete(req: Request): Promise<ResponseType<UserDelete>> {
+  async userDelete(req: Request): Promise<ResponseTypeUserDelete> {
     // ユーザーの削除
     const deleteUser = await this.userModel.delete(Number(req.params.userId));
     if (deleteUser === null) throw new Error();
-
-    const response: ResponseType<UserDelete> = {
-      status: HTTP_STATUS_NO_CONTENT,
-    };
-    return response;
   }
 }

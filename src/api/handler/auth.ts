@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthController } from "../controller/AuthController";
-import { Login, Logout, ResponseType } from "../../types/response";
+import {
+  HTTP_STATUS_NO_CONTENT,
+  HTTP_STATUS_OK,
+} from "../../constants/HTTPStatus";
+import { ResponseTypeLogin } from "../../types/response";
 
 /** ハンドラー：ログイン */
 export const loginHandler = async (
@@ -10,8 +14,8 @@ export const loginHandler = async (
 ): Promise<void> => {
   try {
     const controller = new AuthController();
-    const response: ResponseType<Login> = await controller.login(req);
-    res.status(response.status).json(response?.body);
+    const response: ResponseTypeLogin = await controller.login(req);
+    res.status(HTTP_STATUS_OK).json(response);
   } catch (err: unknown) {
     next(err);
   }
@@ -25,8 +29,8 @@ export const logoutHandler = async (
 ): Promise<void> => {
   try {
     const controller = new AuthController();
-    const response: ResponseType<Logout> = await controller.logout(req);
-    res.status(response.status).json(response?.body);
+    await controller.logout(req);
+    res.status(HTTP_STATUS_NO_CONTENT).json();
   } catch (err: unknown) {
     next(err);
   }

@@ -3,13 +3,9 @@ import { compare } from "bcrypt";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { AuthModel } from "../model/AuthModel";
 import { TokenService } from "../service/TokenService";
-import {
-  HTTP_STATUS_NO_CONTENT,
-  HTTP_STATUS_OK,
-} from "../../constants/HTTPStatus";
 import { FORBIDDEN, UNAUTHORIZED } from "../../constants/Message";
 import { TOKEN_EXPIRES_IN } from "../../env";
-import { ResponseType, Logout, Login } from "../../types/response";
+import { ResponseTypeLogin, ResponseTypeLogout } from "../../types/response";
 
 export class AuthController {
   authModel: AuthModel;
@@ -21,7 +17,7 @@ export class AuthController {
   }
 
   /** ログイン */
-  async login(req: Request): Promise<ResponseType<Login>> {
+  async login(req: Request): Promise<ResponseTypeLogin> {
     // ログインユーザー情報の取得
     const authUser = await this.authModel.getAuthUser(req.body.userName);
     if (authUser === null) throw new Error(UNAUTHORIZED);
@@ -38,18 +34,15 @@ export class AuthController {
     const setTokenResult = await this.authModel.setToken(authUser.id, token);
     if (setTokenResult === null) throw new Error(UNAUTHORIZED);
 
-    const response: ResponseType<Login> = {
-      status: HTTP_STATUS_OK,
-      body: {
-        accessToken: token,
-        expired: TOKEN_EXPIRES_IN,
-      },
+    const response: ResponseTypeLogin = {
+      accessToken: token,
+      expired: TOKEN_EXPIRES_IN,
     };
     return response;
   }
 
   /** ログアウト */
-  async logout(req: Request): Promise<ResponseType<Logout>> {
+  async logout(req: Request): Promise<ResponseTypeLogout> {
     // Authorizationヘッダーからアクセストークンを抽出
     const accessToken = await this.tokenService.subString(
       req.headers.authorization
@@ -63,11 +56,6 @@ export class AuthController {
     // DBからアクセストークンの削除
     const logoutUser = await this.authModel.logout(decoded.user);
     if (logoutUser === null) throw new Error();
-
-    const response: ResponseType<Logout> = {
-      status: HTTP_STATUS_NO_CONTENT,
-    };
-    return response;
   }
 
   /** 認証 */

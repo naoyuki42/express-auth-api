@@ -1,28 +1,23 @@
-/** レスポンス定義 */
-export type ResponseType<T> = {
-  status: number;
-  body?: T;
-};
 /** レスポンス定義：ログイン */
-export type Login = {
+export type ResponseTypeLogin = {
   accessToken: string;
   expired: string;
 };
 /** レスポンス定義：ログアウト */
-export type Logout = never;
+export type ResponseTypeLogout = void;
 /** レスポンス定義：ユーザー取得 */
-export type UserGet = {
+export type ResponseTypeUserGet = {
   userId: number;
   userName: string;
 };
 /** レスポンス定義：ユーザー作成 */
-export type UserCreate = {
+export type ResponseTypeUserCreate = {
   userId: number;
 };
 /** レスポンス定義：ユーザー削除 */
-export type UserDelete = never;
+export type ResponseTypeUserDelete = void;
 /** レスポンス定義：ヘルスチェック */
-export type HealthCheck = {
+export type ResponseTypeHealthCheck = {
   health: string;
 };
 /** レスポンス定義：エラー */
