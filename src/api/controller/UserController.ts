@@ -1,5 +1,6 @@
 import { Request } from "express";
 import { hash } from "bcrypt";
+import { createContext } from "../../context";
 import { UserModel } from "../model/UserModel";
 import {
   ResponseTypeUserCreate,
@@ -11,7 +12,7 @@ export class UserController {
   userModel: UserModel;
 
   constructor() {
-    this.userModel = new UserModel();
+    this.userModel = new UserModel(createContext().prisma);
   }
 
   /** ユーザー取得 */

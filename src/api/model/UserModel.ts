@@ -3,8 +3,8 @@ import { PrismaClient, User } from "@prisma/client";
 export class UserModel {
   prisma: PrismaClient;
 
-  constructor() {
-    this.prisma = new PrismaClient();
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma;
   }
 
   /** ユーザーの取得 */
