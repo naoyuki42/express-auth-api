@@ -1,13 +1,16 @@
 import { getMockReq } from "@jest-mock/express";
 import { HealthCheckController } from "../../../src/api/controller/HealthCheckController";
-import { HEALTH_CHECK_OK } from "../../../src/constants/Message";
 
-describe("コントローラー：ヘルスチェック", () => {
-  test("正常系①", async () => {
+describe("healthCheckメソッド", () => {
+  test("正常系", async () => {
+    // 想定結果
+    const expected = { health: "OK" };
+    // 前準備
     const mockRequest = getMockReq();
+    // テストの実施
     const controller = new HealthCheckController();
-    const response = await controller.healthCheck(mockRequest);
+    const received = await controller.healthCheck(mockRequest);
     // レスポンスボディが想定通りであること
-    expect(response).toMatchObject({ health: HEALTH_CHECK_OK });
+    expect(received).toStrictEqual(expected);
   });
 });
