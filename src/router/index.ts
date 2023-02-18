@@ -73,9 +73,9 @@ APIRouter.delete(
 /** ヘルスチェックAPI */
 APIRouter.get(URI_HEALTH_CHECK, healthCheckHandler);
 
-/** エラー */
-APIRouter.use(errorHandler);
-/** Not Found */
-APIRouter.use(notFoundHandler);
-
-export const router = Router().use(URI_PREFIX_API, APIRouter);
+export const router = Router()
+  .use(URI_PREFIX_API, APIRouter)
+  /** エラーハンドリング */
+  .use(errorHandler)
+  /** Not Found */
+  .use(notFoundHandler);

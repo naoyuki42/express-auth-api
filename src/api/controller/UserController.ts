@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { hash } from "bcrypt";
-import { createContext } from "../../context";
+import { HASHED_SALT_ROUNDS } from "../../env";
+import { Context } from "../../context";
 import { UserModel } from "../model/UserModel";
 import {
   ResponseTypeUserCreate,
@@ -11,8 +12,8 @@ import {
 export class UserController {
   userModel: UserModel;
 
-  constructor() {
-    this.userModel = new UserModel(createContext().prisma);
+  constructor(context: Context) {
+    this.userModel = new UserModel(context);
   }
 
   /** ユーザー取得 */
@@ -27,18 +28,15 @@ export class UserController {
     };
     return response;
   }
-
   /** ユーザー作成 */
   async userCreate(req: Request): Promise<ResponseTypeUserCreate> {
     // パスワードのハッシュ化
-    const hashedPassword = await hash(req.body.password, 10);
-
+    const hashedPassword = await hash(req.body.password, HASHED_SALT_ROUNDS);
     // ユーザーの作成
     const createUser = await this.userModel.create(
       req.body.userName,
       hashedPassword
     );
-    if (createUser === null) throw new Error();
 
     const response: ResponseTypeUserCreate = {
       userId: createUser.id,
@@ -48,7 +46,6 @@ export class UserController {
   /** ユーザー削除 */
   async userDelete(req: Request): Promise<ResponseTypeUserDelete> {
     // ユーザーの削除
-    const deleteUser = await this.userModel.delete(Number(req.params.userId));
-    if (deleteUser === null) throw new Error();
+    await this.userModel.delete(Number(req.params.userId));
   }
 }

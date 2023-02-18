@@ -1,10 +1,11 @@
 import { PrismaClient, User } from "@prisma/client";
+import { Context } from "../../context";
 
 export class UserModel {
   prisma: PrismaClient;
 
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
+  constructor(context: Context) {
+    this.prisma = context.prisma;
   }
 
   /** ユーザーの取得 */
@@ -17,7 +18,7 @@ export class UserModel {
     return result;
   }
   /** ユーザーの作成 */
-  async create(userName: string, password: string): Promise<User | null> {
+  async create(userName: string, password: string): Promise<User> {
     const result = await this.prisma.user.create({
       data: {
         name: userName,
@@ -27,7 +28,7 @@ export class UserModel {
     return result;
   }
   /** ユーザーの削除 */
-  async delete(userId: number): Promise<User | null> {
+  async delete(userId: number): Promise<User> {
     const result = await this.prisma.user.delete({
       where: {
         id: userId,
