@@ -159,4 +159,16 @@ describe("compareTokenメソッド", () => {
       tokenService.compareToken(argument1, argument2)
     ).rejects.toThrow(expected);
   });
+
+  test("異常系：トークンが存在しなかった場合", async () => {
+    // 前準備
+    const argument1 = "dummyToken1";
+    const argument2 = null;
+    // 想定結果
+    const expected = new JsonWebTokenError(FORBIDDEN);
+    // 対象メソッドが想定のエラーを返すこと
+    await expect(
+      tokenService.compareToken(argument1, argument2)
+    ).rejects.toThrow(expected);
+  });
 });

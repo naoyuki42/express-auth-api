@@ -45,7 +45,10 @@ export class TokenService {
     });
   }
   /** トークンの比較 */
-  async compareToken(requestToken: string, dbToken: string): Promise<void> {
+  async compareToken(
+    requestToken: string,
+    dbToken: string | null
+  ): Promise<void> {
     if (requestToken !== dbToken) throw new JsonWebTokenError(FORBIDDEN);
   }
 }

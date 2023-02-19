@@ -1,5 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import { Context } from "../../context";
+import { UNAUTHORIZED } from "../../constants/Message";
 
 export class AuthModel {
   prisma: PrismaClient;
@@ -9,12 +10,14 @@ export class AuthModel {
   }
 
   /** 認証用ユーザー情報の取得 */
-  async getAuthUser(userName: string): Promise<User | null> {
+  async getAuthUser(userName: string): Promise<User> {
     const result = await this.prisma.user.findUnique({
       where: {
         name: userName,
       },
     });
+    // クエリの結果がNULLの場合エラー
+    if (result === null) throw new Error(UNAUTHORIZED);
     return result;
   }
   /** トークンの保存 */
@@ -30,12 +33,14 @@ export class AuthModel {
     return result;
   }
   /** トークンの取得 */
-  async getToken(userName: string): Promise<User | null> {
+  async getToken(userName: string): Promise<User> {
     const result = await this.prisma.user.findUnique({
       where: {
         name: userName,
       },
     });
+    // クエリの結果がNULLの場合エラー
+    if (result === null) throw new Error(UNAUTHORIZED);
     return result;
   }
   /** ログアウト（トークンの削除） */

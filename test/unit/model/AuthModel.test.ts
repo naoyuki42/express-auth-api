@@ -2,6 +2,7 @@ import { hash } from "bcrypt";
 import { Context } from "../../../src/context";
 import { createMockContext, MockContext } from "../../helper/mockContext";
 import { AuthModel } from "../../../src/api/model/AuthModel";
+import { UNAUTHORIZED } from "../../../src/constants/Message";
 
 describe("getAuthUserメソッド", () => {
   let mockContext: MockContext;
@@ -45,11 +46,9 @@ describe("getAuthUserメソッド", () => {
       .spyOn(mockContext.prisma.user, "findUnique")
       .mockResolvedValue(mockUser);
     // 想定結果
-    const expected = null;
+    const expected = new Error(UNAUTHORIZED);
     // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.getAuthUser("naoyuki42")).resolves.toStrictEqual(
-      expected
-    );
+    await expect(authModel.getAuthUser("naoyuki42")).rejects.toThrow(expected);
   });
 
   test("異常系:findUniqueメソッドがエラーになった場合", async () => {
@@ -151,11 +150,9 @@ describe("getTokenメソッド", () => {
       .spyOn(mockContext.prisma.user, "findUnique")
       .mockResolvedValue(mockUser);
     // 想定結果
-    const expected = null;
+    const expected = new Error(UNAUTHORIZED);
     // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.getToken("naoyuki42")).resolves.toStrictEqual(
-      expected
-    );
+    await expect(authModel.getToken("naoyuki42")).rejects.toThrow(expected);
   });
 
   test("異常系:findUniqueメソッドがエラーになった場合", async () => {
