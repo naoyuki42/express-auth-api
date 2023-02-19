@@ -1,8 +1,5 @@
 import { Request } from "express";
-
-import { HTTP_STATUS_OK } from "../../constants/HTTPStatus";
 import { HEALTH_CHECK_OK } from "../../constants/Message";
-
 import { ResponseTypeHealthCheck } from "../../types/response";
 
 export class HealthCheckController {
