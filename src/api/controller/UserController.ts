@@ -3,7 +3,6 @@ import { hash } from "bcrypt";
 import { HASHED_SALT_ROUNDS } from "../../env";
 import { Context } from "../../context";
 import { UserModel } from "../model/UserModel";
-import { parseNumber } from "../../util";
 import {
   ResponseTypeUserCreate,
   ResponseTypeUserDelete,
@@ -19,12 +18,14 @@ export class UserController {
 
   /** ユーザー取得 */
   async userGet(req: Request): Promise<ResponseTypeUserGet> {
+    // パスパラメータの数値への変換
+    const userId = Number(req.params.userId);
     // ユーザーの取得
-    const userId = parseNumber(req.params.userId);
-    const user = await this.userModel.get(userId);
+    const { id, name } = await this.userModel.get(userId);
+    // レスポンスボディ
     const response: ResponseTypeUserGet = {
-      userId: user.id,
-      userName: user.name,
+      userId: id,
+      userName: name,
     };
     return response;
   }
@@ -33,19 +34,21 @@ export class UserController {
     // パスワードのハッシュ化
     const hashedPassword = await hash(req.body.password, HASHED_SALT_ROUNDS);
     // ユーザーの作成
-    const createUser = await this.userModel.create(
+    const { id } = await this.userModel.create(
       req.body.userName,
       hashedPassword
     );
+    // レスポンスボディ
     const response: ResponseTypeUserCreate = {
-      userId: createUser.id,
+      userId: id,
     };
     return response;
   }
   /** ユーザー削除 */
   async userDelete(req: Request): Promise<ResponseTypeUserDelete> {
+    // パスパラメータの数値への変換
+    const userId = Number(req.params.userId);
     // ユーザーの削除
-    const userId = parseNumber(req.params.userId);
     await this.userModel.delete(userId);
   }
 }
