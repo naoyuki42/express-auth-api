@@ -6,13 +6,14 @@ import { TokenService } from "../service/TokenService";
 import { FORBIDDEN, UNAUTHORIZED } from "../../constants/Message";
 import { TOKEN_EXPIRES_IN } from "../../env";
 import { ResponseTypeLogin, ResponseTypeLogout } from "../../types/response";
+import { createContext } from "../../context";
 
 export class AuthController {
   authModel: AuthModel;
   tokenService: TokenService;
 
   constructor() {
-    this.authModel = new AuthModel();
+    this.authModel = new AuthModel(createContext());
     this.tokenService = new TokenService();
   }
 
@@ -31,8 +32,9 @@ export class AuthController {
 
     // アクセストークンの発行と保存
     const token = await this.tokenService.create(req.body.userName);
-    const setTokenResult = await this.authModel.setToken(authUser.id, token);
-    if (setTokenResult === null) throw new Error(UNAUTHORIZED);
+    await this.authModel.setToken(authUser.id, token).catch(() => {
+      throw new Error(UNAUTHORIZED);
+    });
 
     const response: ResponseTypeLogin = {
       accessToken: token,
@@ -54,8 +56,7 @@ export class AuthController {
     if (typeof decoded === "string" || !("user" in decoded)) throw new Error();
 
     // DBからアクセストークンの削除
-    const logoutUser = await this.authModel.logout(decoded.user);
-    if (logoutUser === null) throw new Error();
+    await this.authModel.logout(decoded.user);
   }
 
   /** 認証 */

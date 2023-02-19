@@ -1,10 +1,11 @@
 import { PrismaClient, User } from "@prisma/client";
+import { Context } from "../../context";
 
 export class AuthModel {
   prisma: PrismaClient;
 
-  constructor() {
-    this.prisma = new PrismaClient();
+  constructor(context: Context) {
+    this.prisma = context.prisma;
   }
 
   /** 認証用ユーザー情報の取得 */
@@ -17,7 +18,7 @@ export class AuthModel {
     return result;
   }
   /** トークンの保存 */
-  async setToken(userId: number, token: string): Promise<User | null> {
+  async setToken(userId: number, token: string): Promise<User> {
     const result = await this.prisma.user.update({
       where: {
         id: userId,
@@ -38,7 +39,7 @@ export class AuthModel {
     return result;
   }
   /** ログアウト（トークンの削除） */
-  async logout(userName: string): Promise<User | null> {
+  async logout(userName: string): Promise<User> {
     const result = await this.prisma.user.update({
       where: {
         name: userName,
