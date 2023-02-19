@@ -16,36 +16,36 @@ export class TokenService {
     return token;
   }
   /** Authorizationヘッダーからトークンを切り出し */
-  subString(authHeader: string | undefined): Promise<string> {
+  async subString(authHeader: string | undefined): Promise<string> {
     return new Promise((resolve, reject) => {
       // Authorizationヘッダーがない場合エラー
-      if (authHeader === undefined) {
-        reject(new JsonWebTokenError(FORBIDDEN));
-      } else {
+      if (authHeader !== undefined) {
         // トークンがBearerトークンではない場合エラー
-        if (authHeader.split(" ")[0] !== AUTH_TOKEN_TYPE) {
-          reject(new JsonWebTokenError(FORBIDDEN));
-        } else {
+        if (authHeader.split(" ")[0] === AUTH_TOKEN_TYPE) {
           const token = authHeader.split(" ")[1];
           resolve(token);
         }
       }
+      reject(new JsonWebTokenError(FORBIDDEN));
     });
   }
   /** トークンの有効性の検証とデコード */
-  verify(token: string): Promise<string | JwtPayload> {
+  async verify(token: string): Promise<JwtPayload> {
     return new Promise((resolve, reject) => {
       verify(token, JWT_SECRET_KEY, (err, decoded) => {
         if (!err) {
-          if (decoded !== undefined) {
-            resolve(decoded);
-          } else {
-            reject(new JsonWebTokenError(FORBIDDEN));
+          if (decoded !== undefined && typeof decoded !== "string") {
+            if ("user" in decoded) {
+              resolve(decoded);
+            }
           }
-        } else {
-          reject(err);
         }
+        reject(new JsonWebTokenError(FORBIDDEN));
       });
     });
+  }
+  /** トークンの比較 */
+  async compareToken(requestToken: string, dbToken: string): Promise<void> {
+    if (requestToken !== dbToken) throw new JsonWebTokenError(FORBIDDEN);
   }
 }

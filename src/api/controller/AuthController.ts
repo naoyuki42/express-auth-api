@@ -1,7 +1,7 @@
 import { Request } from "express";
-import { compare } from "bcrypt";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { AuthModel } from "../model/AuthModel";
+import { AuthService } from "../service/AuthService";
 import { TokenService } from "../service/TokenService";
 import { FORBIDDEN, UNAUTHORIZED } from "../../constants/Message";
 import { TOKEN_EXPIRES_IN } from "../../env";
@@ -10,10 +10,12 @@ import { createContext } from "../../context";
 
 export class AuthController {
   authModel: AuthModel;
+  authService: AuthService;
   tokenService: TokenService;
 
   constructor() {
     this.authModel = new AuthModel(createContext());
+    this.authService = new AuthService();
     this.tokenService = new TokenService();
   }
 
@@ -24,11 +26,10 @@ export class AuthController {
     if (authUser === null) throw new Error(UNAUTHORIZED);
 
     // パスワードの検証
-    const isPasswordCompare = await compare(
+    await this.authService.comparePassword(
       req.body.password,
       authUser.password
     );
-    if (!isPasswordCompare) throw new Error(UNAUTHORIZED);
 
     // アクセストークンの発行と保存
     const token = await this.tokenService.create(req.body.userName);
@@ -49,14 +50,12 @@ export class AuthController {
     const accessToken = await this.tokenService.subString(
       req.headers.authorization
     );
-    if (accessToken === undefined) throw new Error();
 
     // アクセストークンのデコード
-    const decoded = await this.tokenService.verify(accessToken);
-    if (typeof decoded === "string" || !("user" in decoded)) throw new Error();
+    const { user } = await this.tokenService.verify(accessToken);
 
     // DBからアクセストークンの削除
-    await this.authModel.logout(decoded.user);
+    await this.authModel.logout(user);
   }
 
   /** 認証 */
@@ -65,17 +64,15 @@ export class AuthController {
     const accessToken = await this.tokenService.subString(
       req.headers.authorization
     );
-    if (accessToken === undefined) throw new Error();
 
     // アクセストークンのデコード
     const decoded = await this.tokenService.verify(accessToken);
-    if (typeof decoded === "string" || !("user" in decoded)) throw new Error();
 
     // DBからアクセストークンの取得
     const result = await this.authModel.getToken(decoded.user);
     if (result === null) throw new JsonWebTokenError(FORBIDDEN);
 
     // アクセストークンが一致しない場合エラー
-    if (accessToken !== result.token) throw new JsonWebTokenError(FORBIDDEN);
+    await this.tokenService.compareToken(accessToken, result.token);
   }
 }
