@@ -1,12 +1,12 @@
 import { Request } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
+import { createContext } from "../../context";
 import { AuthModel } from "../model/AuthModel";
 import { AuthService } from "../service/AuthService";
 import { TokenService } from "../service/TokenService";
 import { FORBIDDEN, UNAUTHORIZED } from "../../constants/Message";
 import { TOKEN_EXPIRES_IN } from "../../env";
 import { ResponseTypeLogin, ResponseTypeLogout } from "../../types/response";
-import { createContext } from "../../context";
 
 export class AuthController {
   authModel: AuthModel;
@@ -70,7 +70,8 @@ export class AuthController {
 
     // DBからアクセストークンの取得
     const result = await this.authModel.getToken(decoded.user);
-    if (result === null) throw new JsonWebTokenError(FORBIDDEN);
+    if (result === null || result.token === null)
+      throw new JsonWebTokenError(FORBIDDEN);
 
     // アクセストークンが一致しない場合エラー
     await this.tokenService.compareToken(accessToken, result.token);
