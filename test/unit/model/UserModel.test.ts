@@ -2,6 +2,7 @@ import { hash } from "bcrypt";
 import { Context } from "../../../src/context";
 import { createMockContext, MockContext } from "../../helper/mockContext";
 import { UserModel } from "../../../src/api/model/UserModel";
+import { USER_NOT_FOUND } from "../../../src/constants/Message";
 
 describe("getメソッド", () => {
   let mockContext: MockContext;
@@ -43,9 +44,9 @@ describe("getメソッド", () => {
       .spyOn(mockContext.prisma.user, "findUnique")
       .mockResolvedValue(mockUser);
     // 想定結果
-    const expected = null;
+    const expected = new Error(USER_NOT_FOUND);
     // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(userModel.get(1)).resolves.toStrictEqual(expected);
+    await expect(userModel.get(1)).rejects.toThrow(expected);
   });
 
   test("異常系:findUniqueメソッドがエラーになった場合", async () => {

@@ -3,6 +3,7 @@ import { hash } from "bcrypt";
 import { HASHED_SALT_ROUNDS } from "../../env";
 import { Context } from "../../context";
 import { UserModel } from "../model/UserModel";
+import { parseNumber } from "../../util";
 import {
   ResponseTypeUserCreate,
   ResponseTypeUserDelete,
@@ -19,9 +20,8 @@ export class UserController {
   /** ユーザー取得 */
   async userGet(req: Request): Promise<ResponseTypeUserGet> {
     // ユーザーの取得
-    const user = await this.userModel.get(Number(req.params.userId));
-    if (user === null) throw new Error();
-
+    const userId = parseNumber(req.params.userId);
+    const user = await this.userModel.get(userId);
     const response: ResponseTypeUserGet = {
       userId: user.id,
       userName: user.name,
@@ -37,7 +37,6 @@ export class UserController {
       req.body.userName,
       hashedPassword
     );
-
     const response: ResponseTypeUserCreate = {
       userId: createUser.id,
     };
@@ -46,6 +45,7 @@ export class UserController {
   /** ユーザー削除 */
   async userDelete(req: Request): Promise<ResponseTypeUserDelete> {
     // ユーザーの削除
-    await this.userModel.delete(Number(req.params.userId));
+    const userId = parseNumber(req.params.userId);
+    await this.userModel.delete(userId);
   }
 }
