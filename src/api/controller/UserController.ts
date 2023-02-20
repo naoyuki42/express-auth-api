@@ -10,7 +10,7 @@ import {
 } from "../../types/response";
 
 export class UserController {
-  userModel: UserModel;
+  private userModel: UserModel;
 
   constructor(context: Context) {
     this.userModel = new UserModel(context);

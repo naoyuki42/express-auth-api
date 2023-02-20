@@ -7,9 +7,9 @@ import { TOKEN_EXPIRES_IN } from "../../env";
 import { ResponseTypeLogin, ResponseTypeLogout } from "../../types/response";
 
 export class AuthController {
-  authModel: AuthModel;
-  authService: AuthService;
-  tokenService: TokenService;
+  private authModel: AuthModel;
+  private authService: AuthService;
+  private tokenService: TokenService;
 
   constructor() {
     this.authModel = new AuthModel(createContext());
