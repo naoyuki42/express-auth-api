@@ -1,5 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
-import { Context } from "../../context";
+import { Context } from "../../config/context";
 import { UNAUTHORIZED } from "../../constants/Message";
 
 export class AuthModel {

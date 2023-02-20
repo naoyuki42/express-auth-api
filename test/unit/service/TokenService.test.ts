@@ -1,7 +1,7 @@
 import { JsonWebTokenError, verify } from "jsonwebtoken";
 import { TokenService } from "../../../src/api/service/TokenService";
 import { FORBIDDEN } from "../../../src/constants/Message";
-import { JWT_SECRET_KEY } from "../../../src/env";
+import { JWT_SECRET_KEY } from "../../../src/config/env";
 
 describe("createメソッド", () => {
   let tokenService: TokenService;

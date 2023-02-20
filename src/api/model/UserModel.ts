@@ -1,6 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import { USER_NOT_FOUND } from "../../constants/Message";
-import { Context } from "../../context";
+import { Context } from "../../config/context";
 
 export class UserModel {
   prisma: PrismaClient;

@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { hash } from "bcrypt";
-import { HASHED_SALT_ROUNDS } from "../../env";
-import { Context } from "../../context";
+import { HASHED_SALT_ROUNDS } from "../../config/env";
+import { Context } from "../../config/context";
 import { UserModel } from "../model/UserModel";
 import {
   ResponseTypeUserCreate,

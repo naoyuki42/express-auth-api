@@ -1,9 +1,9 @@
 import { Request } from "express";
-import { createContext } from "../../context";
+import { createContext } from "../../config/context";
 import { AuthModel } from "../model/AuthModel";
 import { AuthService } from "../service/AuthService";
 import { TokenService } from "../service/TokenService";
-import { TOKEN_EXPIRES_IN } from "../../env";
+import { TOKEN_EXPIRES_IN } from "../../config/env";
 import { ResponseTypeLogin, ResponseTypeLogout } from "../../types/response";
 
 export class AuthController {

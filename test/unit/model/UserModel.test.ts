@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import { Context } from "../../../src/context";
+import { Context } from "../../../src/config/context";
 import { createMockContext, MockContext } from "../../helper/mockContext";
 import { UserModel } from "../../../src/api/model/UserModel";
 import { USER_NOT_FOUND } from "../../../src/constants/Message";

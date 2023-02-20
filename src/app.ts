@@ -4,8 +4,6 @@ import { router } from "./router";
 
 // TODO:テストコードの追加
 // TODO:paginationのAPIの追加
-// TODO:ミドルウェアをまとめたい
-// TODO:エラー判定処理をコントローラーからモデル、サービスに移植
 
 const app = Express();
 

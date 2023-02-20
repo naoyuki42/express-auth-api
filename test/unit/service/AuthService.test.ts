@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import { AuthService } from "../../../src/api/service/AuthService";
 import { UNAUTHORIZED } from "../../../src/constants/Message";
-import { HASHED_SALT_ROUNDS } from "../../../src/env";
+import { HASHED_SALT_ROUNDS } from "../../../src/config/env";
 
 describe("comparePasswordメソッド", () => {
   let authService: AuthService;

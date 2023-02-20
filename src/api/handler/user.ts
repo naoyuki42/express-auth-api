@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createContext } from "../../context";
+import { createContext } from "../../config/context";
 import { UserController } from "../controller/UserController";
 import {
   HTTP_STATUS_OK,

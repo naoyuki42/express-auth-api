@@ -1,6 +1,10 @@
 import { JsonWebTokenError, JwtPayload, verify, sign } from "jsonwebtoken";
 
-import { AUTH_TOKEN_TYPE, JWT_SECRET_KEY, TOKEN_EXPIRES_IN } from "../../env";
+import {
+  AUTH_TOKEN_TYPE,
+  JWT_SECRET_KEY,
+  TOKEN_EXPIRES_IN,
+} from "../../config/env";
 import { FORBIDDEN } from "../../constants/Message";
 
 export class TokenService {

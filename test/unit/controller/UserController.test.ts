@@ -1,6 +1,6 @@
 import { getMockReq } from "@jest-mock/express";
 import { hash } from "bcrypt";
-import { Context } from "../../../src/context";
+import { Context } from "../../../src/config/context";
 import { MockContext, createMockContext } from "../../helper/mockContext";
 import { UserController } from "../../../src/api/controller/UserController";
 import { USER_NOT_FOUND } from "../../../src/constants/Message";
