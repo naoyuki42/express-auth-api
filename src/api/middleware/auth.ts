@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { createContext } from "../../config/context";
 
 import { AuthController } from "../controller/AuthController";
 
@@ -9,7 +10,7 @@ export const authMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const authController = new AuthController();
+    const authController = new AuthController(createContext());
     await authController.authenticate(req);
     next();
   } catch (err) {

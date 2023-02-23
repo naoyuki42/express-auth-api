@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { createContext } from "../../config/context";
+import { Context } from "../../config/context";
 import { AuthModel } from "../model/AuthModel";
 import { AuthService } from "../service/AuthService";
 import { TokenService } from "../service/TokenService";
@@ -11,8 +11,8 @@ export class AuthController {
   private authService: AuthService;
   private tokenService: TokenService;
 
-  constructor() {
-    this.authModel = new AuthModel(createContext());
+  constructor(context: Context) {
+    this.authModel = new AuthModel(context);
     this.authService = new AuthService();
     this.tokenService = new TokenService();
   }
