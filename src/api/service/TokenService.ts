@@ -9,9 +9,9 @@ import { FORBIDDEN } from "../../constants/Message";
 
 export class TokenService {
   /** トークンの作成 */
-  async create(userName: string): Promise<string> {
+  async createToken(userName: string): Promise<string> {
     const payload = {
-      user: userName,
+      userName: userName,
     };
     const option = {
       expiresIn: TOKEN_EXPIRES_IN,
@@ -19,8 +19,9 @@ export class TokenService {
     const token = await sign(payload, JWT_SECRET_KEY, option);
     return token;
   }
+
   /** Authorizationヘッダーからトークンを切り出し */
-  async subString(authHeader: string | undefined): Promise<string> {
+  async subStringToken(authHeader: string | undefined): Promise<string> {
     return new Promise((resolve, reject) => {
       // Authorizationヘッダーがない場合エラー
       if (authHeader !== undefined) {
@@ -33,13 +34,14 @@ export class TokenService {
       reject(new JsonWebTokenError(FORBIDDEN));
     });
   }
+
   /** トークンの有効性の検証とデコード */
-  async verify(token: string): Promise<JwtPayload> {
+  async verifyToken(token: string): Promise<JwtPayload> {
     return new Promise((resolve, reject) => {
       verify(token, JWT_SECRET_KEY, (err, decoded) => {
         if (!err) {
           if (decoded !== undefined && typeof decoded !== "string") {
-            if ("user" in decoded) {
+            if ("userName" in decoded) {
               resolve(decoded);
             }
           }
@@ -47,12 +49,5 @@ export class TokenService {
         reject(new JsonWebTokenError(FORBIDDEN));
       });
     });
-  }
-  /** トークンの比較 */
-  async compareToken(
-    requestToken: string,
-    dbToken: string | null
-  ): Promise<void> {
-    if (requestToken !== dbToken) throw new JsonWebTokenError(FORBIDDEN);
   }
 }

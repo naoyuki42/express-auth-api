@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Context } from "../../config/context";
 import { UNAUTHORIZED } from "../../constants/Message";
 
@@ -9,9 +9,12 @@ export class AuthModel {
     this.prisma = context.prisma;
   }
 
-  /** 認証用ユーザー情報の取得 */
-  async getAuthUser(userName: string): Promise<User> {
+  /** ユーザーのパスワードの取得 */
+  async getUser(userName: string): Promise<{ password: string }> {
     const result = await this.prisma.user.findUnique({
+      select: {
+        password: true,
+      },
       where: {
         name: userName,
       },
@@ -20,39 +23,43 @@ export class AuthModel {
     if (result === null) throw new Error(UNAUTHORIZED);
     return result;
   }
-  /** トークンの保存 */
-  async setToken(userId: number, token: string): Promise<User> {
-    const result = await this.prisma.user.update({
+
+  /** ログイン処理（ログアウトフラグをfalseに変更） */
+  async login(userName: string): Promise<void> {
+    await this.prisma.user.update({
       where: {
-        id: userId,
+        name: userName,
       },
       data: {
-        token: token,
+        isLogout: false,
       },
     });
-    return result;
   }
-  /** トークンの取得 */
-  async getToken(userName: string): Promise<User> {
+
+  /** ログアウト処理（ログアウトフラグをtrueに変更） */
+  async logout(userName: string): Promise<void> {
+    await this.prisma.user.update({
+      where: {
+        name: userName,
+      },
+      data: {
+        isLogout: true,
+      },
+    });
+  }
+
+  /** ログアウト情報の取得 */
+  async getIsLogout(userName: string): Promise<{ isLogout: Boolean }> {
     const result = await this.prisma.user.findUnique({
+      select: {
+        isLogout: true,
+      },
       where: {
         name: userName,
       },
     });
     // クエリの結果がNULLの場合エラー
     if (result === null) throw new Error(UNAUTHORIZED);
-    return result;
-  }
-  /** ログアウト（トークンの削除） */
-  async logout(userName: string): Promise<User> {
-    const result = await this.prisma.user.update({
-      where: {
-        name: userName,
-      },
-      data: {
-        token: null,
-      },
-    });
     return result;
   }
 }
