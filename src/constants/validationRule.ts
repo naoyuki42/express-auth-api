@@ -36,3 +36,8 @@ export const UserDelete: Schema = {
     isInt: true,
   },
 };
+
+// TODO:会員登録APIのバリデーションルールの追加
+// TODO:ユーザー名変更APIのバリデーションルールの追加
+// TODO:パスワード変更APIのバリデーションルールの追加
+// TODO:退会APIのバリデーションルールの追加

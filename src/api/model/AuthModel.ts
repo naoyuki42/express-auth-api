@@ -62,4 +62,23 @@ export class AuthModel {
     if (result === null) throw new Error(UNAUTHORIZED);
     return result;
   }
+
+  /** 会員登録 */
+  async register(userName: string, password: string): Promise<void> {
+    await this.prisma.user.create({
+      data: {
+        name: userName,
+        password: password,
+      },
+    });
+  }
+
+  /** 退会 */
+  async userDelete(userName: string): Promise<void> {
+    await this.prisma.user.delete({
+      where: {
+        name: userName,
+      },
+    });
+  }
 }

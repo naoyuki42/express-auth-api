@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { ErrorService } from "../service/ErrorService";
-import { ResponseTypeError } from "../../types/response";
-import { HTTP_STATUS_NOT_FOUND } from "../../constants/HTTPStatus";
-import { NOT_FOUND } from "../../constants/Message";
+import { ErrorService } from "../../service/ErrorService";
+import { ResponseTypeError } from "../../../types/response";
 
 /** ハンドラー：エラー */
 export const errorHandler = async (
@@ -24,18 +22,4 @@ export const errorHandler = async (
     },
   };
   res.status(code).json(response);
-};
-
-/** ハンドラー：NotFound */
-export const notFoundHandler = async (
-  _req: Request,
-  res: Response
-): Promise<void> => {
-  const response: ResponseTypeError = {
-    error: {
-      code: HTTP_STATUS_NOT_FOUND,
-      message: NOT_FOUND,
-    },
-  };
-  res.status(HTTP_STATUS_NOT_FOUND).json(response);
 };

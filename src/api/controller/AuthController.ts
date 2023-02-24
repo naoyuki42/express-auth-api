@@ -1,10 +1,18 @@
 import { Request } from "express";
+import { hash } from "bcrypt";
 import { Context } from "../../config/context";
 import { AuthModel } from "../model/AuthModel";
 import { AuthService } from "../service/AuthService";
 import { TokenService } from "../service/TokenService";
-import { TOKEN_EXPIRES_IN } from "../../config/env";
-import { ResponseTypeLogin, ResponseTypeLogout } from "../../types/response";
+import { HASHED_SALT_ROUNDS, TOKEN_EXPIRES_IN } from "../../config/env";
+import {
+  ResponseTypeChangePassword,
+  ResponseTypeChangeUserName,
+  ResponseTypeLogin,
+  ResponseTypeLogout,
+  ResponseTypeRegister,
+  ResponseTypeUserDelete,
+} from "../../types/response";
 
 export class AuthController {
   private authModel: AuthModel;
@@ -59,5 +67,31 @@ export class AuthController {
     const { isLogout } = await this.authModel.getIsLogout(userName);
     // 認証の実施
     await this.authService.authenticate(isLogout);
+  }
+
+  /** 会員登録 */
+  async register(req: Request): Promise<ResponseTypeRegister> {
+    // パスワードのハッシュ化
+    const hashedPassword = await hash(req.body.password, HASHED_SALT_ROUNDS);
+    // ユーザーの登録
+    await this.authModel.register(req.body.userName, hashedPassword);
+  }
+
+  /** ユーザー名変更 */
+  async changeUserName(req: Request): Promise<ResponseTypeChangeUserName> {
+    // TODO:未実装
+    return {
+      userName: "1",
+    };
+  }
+
+  /** パスワード変更 */
+  async changePassword(req: Request): Promise<ResponseTypeChangePassword> {
+    // TODO:未実装
+  }
+
+  /** 退会 */
+  async userDelete(req: Request): Promise<ResponseTypeUserDelete> {
+    await this.authModel.userDelete(req.body.userName);
   }
 }
