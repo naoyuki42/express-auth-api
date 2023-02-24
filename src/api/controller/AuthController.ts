@@ -92,6 +92,7 @@ export class AuthController {
 
   /** 退会 */
   async userDelete(req: Request): Promise<ResponseTypeUserDelete> {
+    // ユーザーの削除
     await this.authModel.userDelete(req.body.userName);
   }
 }

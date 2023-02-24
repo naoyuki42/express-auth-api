@@ -11,15 +11,8 @@ export const Login: Schema = {
     isString: true,
   },
 };
-/** バリデーションルール：ユーザー取得 */
-export const UserGet: Schema = {
-  userId: {
-    in: ["params"],
-    isInt: true,
-  },
-};
-/** バリデーションルール：ユーザー作成 */
-export const UserCreate: Schema = {
+/** バリデーションルール：会員登録 */
+export const Register: Schema = {
   userName: {
     in: ["body"],
     isAlphanumeric: true,
@@ -29,15 +22,21 @@ export const UserCreate: Schema = {
     isString: true,
   },
 };
-/** バリデーションルール：ユーザー削除 */
+/** バリデーションルール：退会 */
 export const UserDelete: Schema = {
+  userName: {
+    in: ["body"],
+    isAlphanumeric: true,
+  },
+};
+/** バリデーションルール：ユーザー取得 */
+export const UserGet: Schema = {
   userId: {
     in: ["params"],
     isInt: true,
   },
 };
 
-// TODO:会員登録APIのバリデーションルールの追加
 // TODO:ユーザー名変更APIのバリデーションルールの追加
 // TODO:パスワード変更APIのバリデーションルールの追加
 // TODO:退会APIのバリデーションルールの追加

@@ -17,7 +17,12 @@ import {
 import { authMiddleware } from "../api/middleware/auth";
 import { validationMiddleware } from "../api/middleware/validation";
 /** バリデーションスキーマ */
-import { Login, UserGet } from "../constants/validationRule";
+import {
+  Login,
+  Register,
+  UserDelete,
+  UserGet,
+} from "../constants/validationRule";
 /** ハンドラー */
 import { loginHandler } from "../api/handler/auth/login";
 import { logoutHandler } from "../api/handler/auth/logout";
@@ -43,13 +48,24 @@ APIRouter.post(
 /** ログアウトAPI */
 APIRouter.post(URI_AUTH_LOGOUT, authMiddleware, logoutHandler);
 /** 会員登録API */
-APIRouter.post(URI_AUTH_REGISTER, registerHandler);
+APIRouter.post(
+  URI_AUTH_REGISTER,
+  checkSchema(Register),
+  validationMiddleware,
+  registerHandler
+);
 /** ユーザー名変更API */
 APIRouter.put(URI_AUTH_CHANGE_USER_NAME, authMiddleware, changeUserNameHandler);
 /** パスワード変更API */
 APIRouter.put(URI_AUTH_CHANGE_PASSWORD, authMiddleware, changePasswordHandler);
 /** 退会API */
-APIRouter.delete(URI_AUTH_USER_DELETE, authMiddleware, userDeleteHandler);
+APIRouter.delete(
+  URI_AUTH_USER_DELETE,
+  checkSchema(UserDelete),
+  validationMiddleware,
+  authMiddleware,
+  userDeleteHandler
+);
 
 /** ユーザー */
 /** ユーザー取得API */
