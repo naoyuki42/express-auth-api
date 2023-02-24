@@ -32,3 +32,29 @@ describe("comparePasswordメソッド", () => {
     ).rejects.toThrow(expected);
   });
 });
+
+describe("authenticateメソッド", () => {
+  let authService: AuthService;
+
+  beforeEach(() => {
+    authService = new AuthService();
+  });
+
+  test("正常系", async () => {
+    // 前準備
+    const argument = false;
+    // 対象メソッドがエラーを返さないこと
+    await expect(
+      authService.authenticate(argument)
+    ).resolves.not.toThrowError();
+  });
+
+  test("異常系", async () => {
+    // 前準備
+    const argument = true;
+    // 想定結果
+    const expected = new Error(UNAUTHORIZED);
+    // 対象メソッドが想定のエラーを返すこと
+    await expect(authService.authenticate(argument)).rejects.toThrow(expected);
+  });
+});

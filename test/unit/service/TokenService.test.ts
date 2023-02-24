@@ -3,7 +3,7 @@ import { TokenService } from "../../../src/api/service/TokenService";
 import { FORBIDDEN } from "../../../src/constants/Message";
 import { JWT_SECRET_KEY } from "../../../src/config/env";
 
-describe("createメソッド", () => {
+describe("createTokenメソッド", () => {
   let tokenService: TokenService;
 
   beforeEach(() => {
@@ -16,22 +16,22 @@ describe("createメソッド", () => {
     // 想定結果
     const expected = "naoyuki42";
     // 対象メソッドの呼び出し
-    const received = await tokenService.create(argument);
+    const received = await tokenService.createToken(argument);
     // 対象メソッドの戻り値がnullではないこと
     await expect(received).not.toBeNull();
     /** 対象メソッドの戻り値のデコード結果の型がStringではなく、
-     *  userプロパティを持っていること、
+     *  userNameプロパティを持っていること、
      *  かつユーザー名が想定結果と同じであること */
     const receivedDecoded = await verify(received, JWT_SECRET_KEY);
     await expect(
       typeof receivedDecoded !== "string" &&
-        "user" in receivedDecoded &&
-        receivedDecoded.user
+        "userName" in receivedDecoded &&
+        receivedDecoded.userName
     ).toStrictEqual(expected);
   });
 });
 
-describe("subStringメソッド", () => {
+describe("subStringTokenメソッド", () => {
   let tokenService: TokenService;
 
   beforeEach(() => {
@@ -44,7 +44,7 @@ describe("subStringメソッド", () => {
     // 想定結果
     const expected = "dummyToken";
     // 対象メソッドの呼び出し
-    const received = await tokenService.subString(argument);
+    const received = await tokenService.subStringToken(argument);
     // 対象メソッドの戻り値がnullではないこと
     await expect(received).toStrictEqual(expected);
   });
@@ -55,7 +55,9 @@ describe("subStringメソッド", () => {
     // 想定結果
     const expected = new JsonWebTokenError(FORBIDDEN);
     // 対象メソッドが想定のエラーを返すこと
-    await expect(tokenService.subString(argument)).rejects.toThrow(expected);
+    await expect(tokenService.subStringToken(argument)).rejects.toThrow(
+      expected
+    );
   });
 
   test("異常系:トークンのタイプがBearerトークンではなかった場合", async () => {
@@ -64,7 +66,9 @@ describe("subStringメソッド", () => {
     // 想定結果
     const expected = new JsonWebTokenError(FORBIDDEN);
     // 対象メソッドが想定のエラーを返すこと
-    await expect(tokenService.subString(argument)).rejects.toThrow(expected);
+    await expect(tokenService.subStringToken(argument)).rejects.toThrow(
+      expected
+    );
   });
 
   test("異常系:Bearerとトークンの間に半角スペースがなかった場合", async () => {
@@ -73,11 +77,13 @@ describe("subStringメソッド", () => {
     // 想定結果
     const expected = new JsonWebTokenError(FORBIDDEN);
     // 対象メソッドが想定のエラーを返すこと
-    await expect(tokenService.subString(argument)).rejects.toThrow(expected);
+    await expect(tokenService.subStringToken(argument)).rejects.toThrow(
+      expected
+    );
   });
 });
 
-describe("verifyメソッド", () => {
+describe("verifyTokenメソッド", () => {
   let tokenService: TokenService;
 
   beforeEach(() => {
@@ -86,15 +92,15 @@ describe("verifyメソッド", () => {
 
   test("正常系", async () => {
     // 前準備
-    const argument = await tokenService.create("naoyuki42");
+    const argument = await tokenService.createToken("naoyuki42");
     // 想定結果
     const expected = "naoyuki42";
     // 対象メソッドの呼び出し
-    const received = await tokenService.verify(argument);
+    const received = await tokenService.verifyToken(argument);
     /** 対象メソッドの戻り値の型がStringではなく、
-     * userプロパティを持っており、
+     * userNameプロパティを持っており、
      * 値が想定結果と一致していること */
-    await expect(received.user).toStrictEqual(expected);
+    await expect(received.userName).toStrictEqual(expected);
   });
 
   test("異常系：トークンが無効だった場合", async () => {
@@ -103,7 +109,7 @@ describe("verifyメソッド", () => {
     // 想定結果
     const expected = new JsonWebTokenError(FORBIDDEN);
     // 対象メソッドが想定のエラーを返すこと
-    await expect(tokenService.verify(argument)).rejects.toThrow(expected);
+    await expect(tokenService.verifyToken(argument)).rejects.toThrow(expected);
   });
 
   test("異常系:デコード結果がStringだった場合", async () => {
@@ -113,7 +119,7 @@ describe("verifyメソッド", () => {
     const expected = new JsonWebTokenError(FORBIDDEN);
     // 対象メソッドが想定のエラーを返すこと
     await expect(
-      tokenService.verify(argument).then(() => "dummyReturnValue")
+      tokenService.verifyToken(argument).then(() => "dummyReturnValue")
     ).rejects.toThrow(expected);
   });
 
@@ -124,51 +130,9 @@ describe("verifyメソッド", () => {
     const expected = new JsonWebTokenError(FORBIDDEN);
     // 対象メソッドが想定のエラーを返すこと
     await expect(
-      tokenService.verify(argument).then(() => {
+      tokenService.verifyToken(argument).then(() => {
         key: "Yeah!";
       })
-    ).rejects.toThrow(expected);
-  });
-});
-
-describe("compareTokenメソッド", () => {
-  let tokenService: TokenService;
-
-  beforeEach(() => {
-    tokenService = new TokenService();
-  });
-
-  test("正常系", async () => {
-    // 前準備
-    const argument1 = "dummyToken";
-    const argument2 = "dummyToken";
-    // 対象メソッドがエラーを返さないこと
-    await expect(
-      tokenService.compareToken(argument1, argument2)
-    ).resolves.not.toThrowError();
-  });
-
-  test("異常系：トークンが無効だった場合", async () => {
-    // 前準備
-    const argument1 = "dummyToken1";
-    const argument2 = "dummyToken2";
-    // 想定結果
-    const expected = new JsonWebTokenError(FORBIDDEN);
-    // 対象メソッドが想定のエラーを返すこと
-    await expect(
-      tokenService.compareToken(argument1, argument2)
-    ).rejects.toThrow(expected);
-  });
-
-  test("異常系：トークンが存在しなかった場合", async () => {
-    // 前準備
-    const argument1 = "dummyToken1";
-    const argument2 = null;
-    // 想定結果
-    const expected = new JsonWebTokenError(FORBIDDEN);
-    // 対象メソッドが想定のエラーを返すこと
-    await expect(
-      tokenService.compareToken(argument1, argument2)
     ).rejects.toThrow(expected);
   });
 });

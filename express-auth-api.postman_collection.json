@@ -10,6 +10,46 @@
 			"name": "認証",
 			"item": [
 				{
+					"name": "会員登録",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"userId\", jsonData.userId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"naoyuki42\",\r\n  \"password\": \"Na0yuk1&42\"\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "ログイン",
 					"event": [
 						{
@@ -81,28 +121,88 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "ユーザー",
-			"item": [
+				},
 				{
-					"name": "ユーザー作成",
+					"name": "ユーザー名変更",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"naoyuki4242\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/user/name",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"name"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "パスワード変更",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"naoyuki42\",\r\n    \"password\": \"Na0yuk1&42\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/user/password",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "退会",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"userId\", jsonData.userId);"
+									""
 								],
 								"type": "text/javascript"
 							}
 						}
 					],
 					"request": {
-						"method": "POST",
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -112,20 +212,26 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"naoyuki42\",\r\n  \"password\": \"Na0yuk1&42\"\r\n}"
+							"raw": "{\r\n    \"userName\": \"naoyuki42\"\r\n}"
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/user",
+							"raw": "{{BASE_URL}}/auth/user",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
+								"auth",
 								"user"
 							]
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "ユーザー",
+			"item": [
 				{
 					"name": "ユーザー取得",
 					"event": [
@@ -176,57 +282,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "ユーザー削除",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{ACCESS_TOKEN}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/user/:userId",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"user",
-								":userId"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": "{{userId}}"
-								}
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -248,7 +303,7 @@
 			"response": []
 		},
 		{
-			"name": "Not Found",
+			"name": "404 Not Found",
 			"request": {
 				"method": "GET",
 				"header": [],
