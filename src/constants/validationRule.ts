@@ -39,4 +39,3 @@ export const UserGet: Schema = {
 
 // TODO:ユーザー名変更APIのバリデーションルールの追加
 // TODO:パスワード変更APIのバリデーションルールの追加
-// TODO:退会APIのバリデーションルールの追加
