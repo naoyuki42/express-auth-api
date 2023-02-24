@@ -10,8 +10,12 @@ export class UserModel {
   }
 
   /** ユーザーの取得 */
-  async get(userId: number): Promise<User> {
+  async get(userId: number): Promise<{ id: number; name: string }> {
     const result = await this.prisma.user.findUnique({
+      select: {
+        id: true,
+        name: true,
+      },
       where: {
         id: userId,
       },

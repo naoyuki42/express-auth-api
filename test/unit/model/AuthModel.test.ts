@@ -4,16 +4,16 @@ import { createMockContext, MockContext } from "../../helper/mockContext";
 import { AuthModel } from "../../../src/api/model/AuthModel";
 import { UNAUTHORIZED } from "../../../src/constants/Message";
 
-describe("getAuthUserメソッド", () => {
-  let mockContext: MockContext;
-  let authModel: AuthModel;
+let mockContext: MockContext;
+let authModel: AuthModel;
 
-  beforeEach(() => {
-    mockContext = createMockContext();
-    const context = mockContext as unknown as Context;
-    authModel = new AuthModel(context);
-  });
+beforeEach(() => {
+  mockContext = createMockContext();
+  const context = mockContext as unknown as Context;
+  authModel = new AuthModel(context);
+});
 
+describe("getUserメソッド", () => {
   test("正常系:ユーザーを取得出来た場合", async () => {
     // 前準備
     const hashedPassword = await hash("na0yuk1&42", 10);
@@ -21,7 +21,7 @@ describe("getAuthUserメソッド", () => {
       id: 1,
       name: "naoyuki42",
       password: hashedPassword,
-      token: null,
+      isLogout: false,
     };
     jest
       .spyOn(mockContext.prisma.user, "findUnique")
@@ -31,10 +31,10 @@ describe("getAuthUserメソッド", () => {
       id: 1,
       name: "naoyuki42",
       password: hashedPassword,
-      token: null,
+      isLogout: false,
     };
     // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.getAuthUser("naoyuki42")).resolves.toStrictEqual(
+    await expect(authModel.getUser("naoyuki42")).resolves.toStrictEqual(
       expected
     );
   });
@@ -48,7 +48,7 @@ describe("getAuthUserメソッド", () => {
     // 想定結果
     const expected = new Error(UNAUTHORIZED);
     // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.getAuthUser("naoyuki42")).rejects.toThrow(expected);
+    await expect(authModel.getUser("naoyuki42")).rejects.toThrow(expected);
   });
 
   test("異常系:findUniqueメソッドがエラーになった場合", async () => {
@@ -59,20 +59,11 @@ describe("getAuthUserメソッド", () => {
     // 想定結果
     const expected = new Error();
     // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.getAuthUser("naoyuki42")).rejects.toThrow(expected);
+    await expect(authModel.getUser("naoyuki42")).rejects.toThrow(expected);
   });
 });
 
-describe("setTokenメソッド", () => {
-  let mockContext: MockContext;
-  let authModel: AuthModel;
-
-  beforeEach(() => {
-    mockContext = createMockContext();
-    const context = mockContext as unknown as Context;
-    authModel = new AuthModel(context);
-  });
-
+describe("loginメソッド", () => {
   test("正常系:ユーザーを取得出来た場合", async () => {
     // 前準備
     const hashedPassword = await hash("na0yuk1&42", 10);
@@ -80,23 +71,14 @@ describe("setTokenメソッド", () => {
       id: 1,
       name: "naoyuki42",
       password: hashedPassword,
-      token: "dummyToken",
+      isLogout: false,
     };
     jest.spyOn(mockContext.prisma.user, "update").mockResolvedValue(mockUser);
-    // 想定結果
-    const expected = {
-      id: 1,
-      name: "naoyuki42",
-      password: hashedPassword,
-      token: "dummyToken",
-    };
-    // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.setToken(1, "dummyToken")).resolves.toStrictEqual(
-      expected
-    );
+    // 対象メソッドがエラーを返さないこと
+    await expect(authModel.login("naoyuki42")).resolves.not.toThrowError();
   });
 
-  test("異常系:findUniqueメソッドがエラーになった場合", async () => {
+  test("異常系:DBでエラーがあった場合", async () => {
     // 前準備
     jest
       .spyOn(mockContext.prisma.user, "update")
@@ -104,79 +86,11 @@ describe("setTokenメソッド", () => {
     // 想定結果
     const expected = new Error();
     // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.setToken(1, "dummyToken")).rejects.toThrow(expected);
-  });
-});
-
-describe("getTokenメソッド", () => {
-  let mockContext: MockContext;
-  let authModel: AuthModel;
-
-  beforeEach(() => {
-    mockContext = createMockContext();
-    const context = mockContext as unknown as Context;
-    authModel = new AuthModel(context);
-  });
-
-  test("正常系:ユーザーを取得出来た場合", async () => {
-    // 前準備
-    const hashedPassword = await hash("na0yuk1&42", 10);
-    const mockUser = {
-      id: 1,
-      name: "naoyuki42",
-      password: hashedPassword,
-      token: "dummyToken",
-    };
-    jest
-      .spyOn(mockContext.prisma.user, "findUnique")
-      .mockResolvedValue(mockUser);
-    // 想定結果
-    const expected = {
-      id: 1,
-      name: "naoyuki42",
-      password: hashedPassword,
-      token: "dummyToken",
-    };
-    // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.getToken("naoyuki42")).resolves.toStrictEqual(
-      expected
-    );
-  });
-
-  test("異常系:findUniqueメソッドの戻り値がnullの場合", async () => {
-    // 前準備
-    const mockUser = null;
-    jest
-      .spyOn(mockContext.prisma.user, "findUnique")
-      .mockResolvedValue(mockUser);
-    // 想定結果
-    const expected = new Error(UNAUTHORIZED);
-    // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.getToken("naoyuki42")).rejects.toThrow(expected);
-  });
-
-  test("異常系:findUniqueメソッドがエラーになった場合", async () => {
-    // 前準備
-    jest
-      .spyOn(mockContext.prisma.user, "findUnique")
-      .mockRejectedValue(new Error());
-    // 想定結果
-    const expected = new Error();
-    // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.getToken("naoyuki42")).rejects.toThrow(expected);
+    await expect(authModel.login("naoyuki42")).rejects.toThrow(expected);
   });
 });
 
 describe("logoutメソッド", () => {
-  let mockContext: MockContext;
-  let authModel: AuthModel;
-
-  beforeEach(() => {
-    mockContext = createMockContext();
-    const context = mockContext as unknown as Context;
-    authModel = new AuthModel(context);
-  });
-
   test("正常系:ユーザーを取得出来た場合", async () => {
     // 前準備
     const hashedPassword = await hash("na0yuk1&42", 10);
@@ -184,23 +98,14 @@ describe("logoutメソッド", () => {
       id: 1,
       name: "naoyuki42",
       password: hashedPassword,
-      token: null,
+      isLogout: true,
     };
     jest.spyOn(mockContext.prisma.user, "update").mockResolvedValue(mockUser);
-    // 想定結果
-    const expected = {
-      id: 1,
-      name: "naoyuki42",
-      password: hashedPassword,
-      token: null,
-    };
-    // 対象メソッドの戻り値が想定結果と同じであること
-    await expect(authModel.logout("naoyuki42")).resolves.toStrictEqual(
-      expected
-    );
+    // 対象メソッドがエラーを返さないこと
+    await expect(authModel.logout("naoyuki42")).resolves.not.toThrowError();
   });
 
-  test("異常系:findUniqueメソッドがエラーになった場合", async () => {
+  test("異常系:DBでエラーがあった場合", async () => {
     // 前準備
     jest
       .spyOn(mockContext.prisma.user, "update")
@@ -209,5 +114,71 @@ describe("logoutメソッド", () => {
     const expected = new Error();
     // 対象メソッドの戻り値が想定結果と同じであること
     await expect(authModel.logout("naoyuki42")).rejects.toThrow(expected);
+  });
+});
+
+describe("registerメソッド", () => {
+  test("正常系:ユーザーを作成出来た場合", async () => {
+    // 前準備
+    const hashedPassword = await hash("na0yuk1&42", 10);
+    const mockUser = {
+      id: 1,
+      name: "naoyuki42",
+      password: hashedPassword,
+      isLogout: false,
+    };
+    jest.spyOn(mockContext.prisma.user, "create").mockResolvedValue(mockUser);
+    // 想定結果
+    const expected = {
+      id: 1,
+      name: "naoyuki42",
+      password: hashedPassword,
+      token: null,
+    };
+    // 対象メソッドがエラーを返さないこと
+    await expect(
+      authModel.register("naoyuki42", hashedPassword)
+    ).resolves.not.toThrowError();
+  });
+
+  test("異常系:ユーザーを作成出来なかった場合", async () => {
+    // 前準備
+    const hashedPassword = await hash("na0yuk1&42", 10);
+    jest
+      .spyOn(mockContext.prisma.user, "create")
+      .mockRejectedValue(new Error());
+    // 想定結果
+    const expected = new Error();
+    // 対象メソッドの戻り値が想定結果と同じであること
+    await expect(
+      authModel.register("naoyuki42", hashedPassword)
+    ).rejects.toThrow(expected);
+  });
+});
+
+describe("userDeleteメソッド", () => {
+  test("正常系", async () => {
+    // 前準備
+    const hashedPassword = await hash("na0yuk1&42", 10);
+    const mockUser = {
+      id: 1,
+      name: "naoyuki42",
+      password: hashedPassword,
+      isLogout: false,
+    };
+    jest.spyOn(mockContext.prisma.user, "delete").mockResolvedValue(mockUser);
+    // 対象メソッドがエラーを返さないこと
+    await expect(authModel.userDelete("naoyuki42")).resolves.not.toThrowError();
+  });
+
+  test("異常系:ユーザーを削除出来なかった場合", async () => {
+    // 前準備
+    jest
+      .spyOn(mockContext.prisma.user, "delete")
+      .mockRejectedValue(new Error());
+    // 想定結果
+    const expected = new Error();
+    // 対象メソッドの戻り値が想定結果と同じであること
+    await expect(authModel.userDelete("naoyuki42")).rejects.toThrow(expected);
   });
 });
