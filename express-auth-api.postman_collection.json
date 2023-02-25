@@ -74,7 +74,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"naoyuki42\",\r\n  \"password\": \"Na0yuk1&42\"\r\n}",
+							"raw": "{\r\n  \"userName\": \"naoyuki42\",\r\n  \"password\": \"na0yuk1&42\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -125,11 +125,21 @@
 				{
 					"name": "ユーザー名変更",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userName\": \"naoyuki4242\"\r\n}",
+							"raw": "{\r\n    \"userName\": {\r\n        \"old\": \"naoyuki42\",\r\n        \"new\": \"naoyuki42\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -153,11 +163,21 @@
 				{
 					"name": "パスワード変更",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userName\": \"naoyuki42\",\r\n    \"password\": \"Na0yuk1&42\"\r\n}",
+							"raw": "{\r\n    \"userName\": \"naoyuki42\",\r\n    \"password\": \"na0yuk1&42\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -276,7 +296,7 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "{{userId}}"
+									"value": "1"
 								}
 							]
 						}
