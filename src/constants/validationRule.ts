@@ -22,6 +22,17 @@ export const Register: Schema = {
     isString: true,
   },
 };
+/** バリデーションルール：ユーザー名変更 */
+export const ChangeUserName: Schema = {
+  "userName.old": {
+    in: ["body"],
+    isAlphanumeric: true,
+  },
+  "userName.new": {
+    in: ["body"],
+    isAlphanumeric: true,
+  },
+};
 /** バリデーションルール：退会 */
 export const UserDelete: Schema = {
   userName: {
@@ -37,5 +48,4 @@ export const UserGet: Schema = {
   },
 };
 
-// TODO:ユーザー名変更APIのバリデーションルールの追加
 // TODO:パスワード変更APIのバリデーションルールの追加

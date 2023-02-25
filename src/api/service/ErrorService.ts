@@ -4,8 +4,14 @@ import {
   HTTP_STATUS_UNAUTHORIZED,
   HTTP_STATUS_FORBIDDEN,
   HTTP_STATUS_SERVER_ERROR,
+  HTTP_STATUS_BAD_REQUEST,
 } from "../../constants/HTTPStatus";
-import { UNAUTHORIZED, FORBIDDEN, SERVER_ERROR } from "../../constants/Message";
+import {
+  UNAUTHORIZED,
+  FORBIDDEN,
+  SERVER_ERROR,
+  NOT_UNIQUE_NAME,
+} from "../../constants/Message";
 
 /** エラーサービスクラス */
 export class ErrorService {
@@ -22,6 +28,12 @@ export class ErrorService {
       return {
         code: HTTP_STATUS_FORBIDDEN,
         message: FORBIDDEN,
+      };
+    } else if (err.message === NOT_UNIQUE_NAME) {
+      // ユーザー名が一意ではない
+      return {
+        code: HTTP_STATUS_BAD_REQUEST,
+        message: NOT_UNIQUE_NAME,
       };
     } else {
       // サーバーエラー

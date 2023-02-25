@@ -13,6 +13,7 @@ import {
   ResponseTypeRegister,
   ResponseTypeUserDelete,
 } from "../../types/response";
+import { resolve } from "path";
 
 export class AuthController {
   private authModel: AuthModel;
@@ -53,6 +54,7 @@ export class AuthController {
     const { userName } = await this.tokenService.verifyToken(accessToken);
     // ログアウト処理
     await this.authModel.logout(userName);
+    resolve();
   }
 
   /** 認証 */
@@ -67,22 +69,34 @@ export class AuthController {
     const { isLogout } = await this.authModel.getIsLogout(userName);
     // 認証の実施
     await this.authService.authenticate(isLogout);
+    resolve();
   }
 
   /** 会員登録 */
   async register(req: Request): Promise<ResponseTypeRegister> {
+    // ユーザー名が一意かを検証
+    await this.authModel.verifyUniqueName(req.body.userName);
     // パスワードのハッシュ化
     const hashedPassword = await hash(req.body.password, HASHED_SALT_ROUNDS);
     // ユーザーの登録
     await this.authModel.register(req.body.userName, hashedPassword);
+    resolve();
   }
 
   /** ユーザー名変更 */
   async changeUserName(req: Request): Promise<ResponseTypeChangeUserName> {
-    // TODO:未実装
-    return {
-      userName: "1",
+    // ユーザー名が一意かを検証
+    await this.authModel.verifyUniqueName(req.body.userName.new);
+    // ユーザー名の更新
+    const { name } = await this.authModel.updateName(
+      req.body.userName.old,
+      req.body.userName.new
+    );
+    // レスポンス
+    const response: ResponseTypeChangeUserName = {
+      userName: name,
     };
+    return response;
   }
 
   /** パスワード変更 */
@@ -94,5 +108,6 @@ export class AuthController {
   async userDelete(req: Request): Promise<ResponseTypeUserDelete> {
     // ユーザーの削除
     await this.authModel.userDelete(req.body.userName);
+    resolve();
   }
 }

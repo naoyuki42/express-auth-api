@@ -18,6 +18,7 @@ import { authMiddleware } from "../api/middleware/auth";
 import { validationMiddleware } from "../api/middleware/validation";
 /** バリデーションスキーマ */
 import {
+  ChangeUserName,
   Login,
   Register,
   UserDelete,
@@ -55,7 +56,13 @@ APIRouter.post(
   registerHandler
 );
 /** ユーザー名変更API */
-APIRouter.put(URI_AUTH_CHANGE_USER_NAME, authMiddleware, changeUserNameHandler);
+APIRouter.put(
+  URI_AUTH_CHANGE_USER_NAME,
+  checkSchema(ChangeUserName),
+  validationMiddleware,
+  authMiddleware,
+  changeUserNameHandler
+);
 /** パスワード変更API */
 APIRouter.put(URI_AUTH_CHANGE_PASSWORD, authMiddleware, changePasswordHandler);
 /** 退会API */

@@ -14,5 +14,5 @@ export const NOT_FOUND = "not found";
 export const HEALTH_CHECK_OK = "OK";
 /** メッセージ定義：ユーザー取得失敗 */
 export const USER_NOT_FOUND = "user not found";
-/** メッセージ定義：数値型変換の失敗 */
-export const FAILED_TO_PARSE_NUMBER = "failed to parse number";
+/** メッセージ定義：ユーザー名が一意ではない */
+export const NOT_UNIQUE_NAME = "not unique name";

@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { resolve } from "path";
 import { Context } from "../../config/context";
-import { UNAUTHORIZED } from "../../constants/Message";
+import { NOT_UNIQUE_NAME, UNAUTHORIZED } from "../../constants/Message";
 
 export class AuthModel {
   prisma: PrismaClient;
@@ -34,6 +35,7 @@ export class AuthModel {
         isLogout: false,
       },
     });
+    resolve();
   }
 
   /** ログアウト処理（ログアウトフラグをtrueに変更） */
@@ -46,6 +48,7 @@ export class AuthModel {
         isLogout: true,
       },
     });
+    resolve();
   }
 
   /** ログアウト情報の取得 */
@@ -65,12 +68,40 @@ export class AuthModel {
 
   /** 会員登録 */
   async register(userName: string, password: string): Promise<void> {
+    // ユーザー作成
     await this.prisma.user.create({
       data: {
         name: userName,
         password: password,
       },
     });
+    resolve();
+  }
+
+  /** ユーザー名更新 */
+  async updateName(
+    oldName: string,
+    newName: string
+  ): Promise<{ name: string }> {
+    /**
+     * NOTE:
+     * ユーザー名の変更によってJWTトークンが使用出来なくなるため、
+     * ユーザーの更新処理時にはログアウトフラグをtrueにする
+     * */
+    // ユーザー名の更新
+    const result = await this.prisma.user.update({
+      select: {
+        name: true,
+      },
+      where: {
+        name: oldName,
+      },
+      data: {
+        name: newName,
+        isLogout: true,
+      },
+    });
+    return result;
   }
 
   /** 退会 */
@@ -80,5 +111,19 @@ export class AuthModel {
         name: userName,
       },
     });
+    resolve();
+  }
+
+  /** ユーザー名が一意かの検証 */
+  async verifyUniqueName(userName: string): Promise<void> {
+    // ユーザー名で検索
+    const user = await this.prisma.user.findUnique({
+      where: {
+        name: userName,
+      },
+    });
+    // ユーザー名が一意でなかった場合エラー
+    if (user !== null) throw new Error(NOT_UNIQUE_NAME);
+    resolve();
   }
 }
