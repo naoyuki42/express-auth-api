@@ -15,7 +15,6 @@ beforeEach(() => {
   controller = new AuthController(context);
 });
 
-// TODO:修正
 describe("loginメソッド", () => {
   test("正常系", async () => {
     // 前準備

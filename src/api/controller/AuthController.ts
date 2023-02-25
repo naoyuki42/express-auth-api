@@ -101,7 +101,11 @@ export class AuthController {
 
   /** パスワード変更 */
   async changePassword(req: Request): Promise<ResponseTypeChangePassword> {
-    // TODO:未実装
+    // パスワードのハッシュ化
+    const hashedPassword = await hash(req.body.password, HASHED_SALT_ROUNDS);
+    // パスワード更新
+    await this.authModel.updatePassword(req.body.userName, hashedPassword);
+    resolve();
   }
 
   /** 退会 */

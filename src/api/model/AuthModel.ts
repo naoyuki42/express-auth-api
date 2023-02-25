@@ -104,6 +104,21 @@ export class AuthModel {
     return result;
   }
 
+  /** パスワード更新 */
+  async updatePassword(userName: string, password: string): Promise<void> {
+    // ユーザー名の更新
+    await this.prisma.user.update({
+      where: {
+        name: userName,
+      },
+      data: {
+        password: password,
+        isLogout: true,
+      },
+    });
+    resolve();
+  }
+
   /** 退会 */
   async userDelete(userName: string): Promise<void> {
     await this.prisma.user.delete({

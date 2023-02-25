@@ -33,6 +33,17 @@ export const ChangeUserName: Schema = {
     isAlphanumeric: true,
   },
 };
+/** バリデーションルール：パスワード変更 */
+export const ChangePassword: Schema = {
+  userName: {
+    in: ["body"],
+    isAlphanumeric: true,
+  },
+  password: {
+    in: ["body"],
+    isString: true,
+  },
+};
 /** バリデーションルール：退会 */
 export const UserDelete: Schema = {
   userName: {
@@ -47,5 +58,3 @@ export const UserGet: Schema = {
     isInt: true,
   },
 };
-
-// TODO:パスワード変更APIのバリデーションルールの追加
